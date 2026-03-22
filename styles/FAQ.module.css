@@ -1,0 +1,132 @@
+/* FAQ Page */
+.main {
+  min-height: 100vh;
+  padding: 60px 5vw;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.faqItem {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.faqItem[open] {
+  box-shadow: var(--shadow);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.question:hover {
+  background: var(--bg);
+}
+
+.faqItem[open] .question {
+  background: var(--blue-light);
+  color: var(--blue);
+}
+
+.question::after {
+  content: '▼';
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+}
+
+.faqItem[open] .question::after {
+  transform: rotate(180deg);
+}
+
+.answer {
+  padding: 20px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-size: 0.95rem;
+}
+
+.cta {
+  text-align: center;
+  background: var(--blue-light);
+  border: 1px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  margin-top: 60px;
+}
+
+.cta h2 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.cta p {
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.ctaButton {
+  display: inline-block;
+  background: var(--blue);
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 100px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.ctaButton:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .question {
+    font-size: 0.95rem;
+  }
+}

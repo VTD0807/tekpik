@@ -1,0 +1,87 @@
+/* Product Card */
+.postCard {
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s, box-shadow 0.25s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.postCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.postThumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.blueBg {
+  background: #eff6ff;
+}
+
+.greenBg {
+  background: #f0fdf4;
+}
+
+.warmBg {
+  background: #fef3c7;
+}
+
+.postBody {
+  padding: 20px;
+}
+
+.postTags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.tag {
+  font-size: 0.68rem;
+  font-weight: 500;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  padding: 3px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
+.postTitle {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.postExcerpt {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.postMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}

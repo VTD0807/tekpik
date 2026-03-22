@@ -1,0 +1,118 @@
+/* Guides Page */
+.main {
+  min-height: 100vh;
+  padding: 60px 5vw;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+}
+
+.guidesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.guideCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.guideCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.guideImage {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.guideContent {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.category {
+  display: inline-block;
+  background: var(--blue-light);
+  color: var(--blue);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  width: fit-content;
+}
+
+.guideTitle {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.35;
+}
+
+.guideDescription {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: auto;
+}
+
+.readTime {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .guidesGrid {
+    grid-template-columns: 1fr;
+  }
+}

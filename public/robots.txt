@@ -1,0 +1,19 @@
+# User-agent: *
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://tekpik.in/sitemap.xml
+
+# Crawl delay (optional - be nice to servers)
+Crawl-delay: 1
+
+# Allow Google, Bing, etc to crawl everything else
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

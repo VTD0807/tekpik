@@ -1,0 +1,41 @@
+/* Footer */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 5vw;
+  background: var(--surface);
+}
+
+.footerInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footerInner > div:first-child {
+  flex: 1;
+}
+
+.footerCopy {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.footerLinks {
+  display: flex;
+  gap: 20px;
+}
+
+.footerLinks a {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footerLinks a:hover {
+  color: var(--text);
+}

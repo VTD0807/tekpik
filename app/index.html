@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TekPik App - Dashboard</title>
+    <meta name="description" content="TekPik - The ultimate smart tech gadget review and affiliate marketing platform." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    
+    <style>
+        /* Minimalist Blue & Black Theme */
+        :root {
+            --bg-body: #F8FAFC; 
+            --bg-surface: #FFFFFF;
+            --text-dark: #0F172A; /* Black/Dark Navy from logo text */
+            --text-muted: #64748B;
+            --color-primary: #3B82F6; /* Bright Blue from logo dot */
+            --border-color: #E2E8F0;
+            --hover-state: #EFF6FF; 
+            
+            /* Shadows & Radii */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-card: 12px;
+            --radius-pill: 9999px;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); color: var(--text-dark); }
+        h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; }
+        h2 { font-size: 1.25rem; font-weight: 700; }
+        
+        a { text-decoration: none; color: inherit; }
+        button { cursor: pointer; font-family: inherit; border: none; background: none; outline: none; }
+        
+        .app-layout { display: flex; width: 100%; height: 100%; }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 24px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+        
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 48px;
+            letter-spacing: -0.05em;
+            display: flex;
+            align-items: center;
+        }
+        .logo span {
+            color: var(--color-primary);
+        }
+
+        .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover { background-color: var(--hover-state); color: var(--color-primary); }
+        .nav-item.active {
+            background-color: var(--hover-state);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* Main Content Area */
+        .main-col {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            height: 80px;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            flex-shrink: 0;
+        }
+
+        .search-container { position: relative; width: 320px; }
+        .search-container input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            font-size: 0.875rem;
+            font-family: inherit;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+        .search-container input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .user-actions { display: flex; align-items: center; gap: 20px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background-color: var(--text-dark); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+
+        /* Page Containment */
+        .page-content {
+            flex-grow: 1;
+            padding: 0 40px 40px 40px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        
+        .view-section {
+            display: none;
+            animation: fadeIn 0.2s ease forwards;
+        }
+        .view-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Reusable Components */
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+        }
+        .card.hoverable { transition: all 0.2s ease; cursor: pointer; }
+        .card.hoverable:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--color-primary);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.15s ease;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-primary { background-color: var(--text-dark); color: white; }
+        .btn-primary:hover { background-color: black; }
+        
+        .btn-secondary { background-color: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-dark); }
+        .btn-secondary:hover { border-color: var(--text-dark); }
+
+        .btn-blue { background-color: var(--color-primary); color: white; }
+        .btn-blue:hover { opacity: 0.9; }
+
+        .btn-ghost { color: var(--text-dark); }
+        .btn-ghost:hover { background-color: var(--border-color); }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge.blue { background-color: var(--hover-state); color: var(--color-primary); }
+        .badge.dark { background-color: var(--border-color); color: var(--text-dark); }
+        .badge.outline { border: 1px solid var(--border-color); color: var(--text-muted); }
+
+        /* Dashboard specific */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
+        .stat-value { font-family: var(--font-display); font-size: 2rem; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
+        .stat-label { color: var(--text-muted); font-size: 0.875rem; }
+        
+        .dash-columns { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+        .list-row { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border-color); }
+        .list-row:last-child { border-bottom: none; }
+        
+        /* Product Listing */
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
+        .filter-pill { padding: 8px 16px; border-radius: var(--radius-pill); border: 1px solid var(--border-color); color: var(--text-dark); cursor: pointer; font-weight: 500; transition: all 0.2s;}
+        .filter-pill.active { background: var(--text-dark); color: white; border-color: var(--text-dark); }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .product-card { padding: 20px; display: flex; flex-direction: column; gap: 16px; justify-content: space-between; }
+        .product-info h3 { margin-bottom: 8px; font-size: 1.1rem; }
+        .product-price { color: var(--text-dark); font-weight: 600; font-size: 1.2rem; }
+        
+        /* Compare Page */
+        .compare-table { width: 100%; border-collapse: collapse; background: var(--bg-surface); border-radius: var(--radius-card); box-shadow: var(--shadow-sm); overflow: hidden;}
+        .compare-table th, .compare-table td { padding: 20px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .compare-table th { background: #F8FAFC; font-family: var(--font-display); font-size: 1.1rem; border-bottom: 2px solid var(--border-color); }
+        
+        /* AI Recommender */
+        .ai-chat-container { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; height: calc(100vh - 120px); }
+        .chat-history { flex-grow: 1; overflow-y: auto; padding-bottom: 24px; display: flex; flex-direction: column; gap: 24px; }
+        .chat-bubble { max-width: 85%; padding: 16px 20px; border-radius: 12px; line-height: 1.5; }
+        .chat-user { background: var(--color-primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-ai { background: var(--bg-surface); border: 1px solid var(--border-color); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .ai-input-bar { display: flex; gap: 12px; background: var(--bg-surface); padding: 12px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); }
+        .ai-input-bar input { flex-grow: 1; border: none; outline: none; background: transparent; font-family: inherit; font-size: 1rem; padding-left: 8px; }
+        
+        /* Table generic (Affiliate) */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 16px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .data-table th { color: var(--text-muted); font-weight: 500; font-size: 0.85rem; }
+
+        /* Blog */
+        .blog-hero { position: relative; height: 320px; border-radius: var(--radius-card); background: var(--border-color); margin-bottom: 32px; display: flex; align-items: flex-end; padding: 32px; }
+        .blog-hero-content { background: var(--bg-surface); padding: 24px; border-radius: 8px; max-width: 600px; box-shadow: var(--shadow-sm); }
+        .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-top: 12px; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">tekpik<span>&bull;</span></div>
+        <ul class="nav-menu">
+            <li class="nav-item active" data-target="dashboard">Dashboard</li>
+            <li class="nav-item" data-target="products">Products</li>
+            <li class="nav-item" data-target="compare">Compare</li>
+            <li class="nav-item" data-target="ai-recommender">AI Picks</li>
+            <li class="nav-item" data-target="links">Affiliate Links</li>
+            <li class="nav-item" data-target="blog">Blog</li>
+            <li class="nav-item" data-target="settings">Settings</li>
+        </ul>
+        <div style="margin-top: auto; padding-top: 24px; border-top: 1px solid var(--border-color);">
+            <a href="/help/" style="font-size: 0.8rem; color: var(--text-muted);">Legal & T&C</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-col">
+        <header class="top-bar">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" placeholder="Search..." />
+            </div>
+            <div class="user-actions">
+                <span style="color: var(--text-muted); cursor: pointer;">🔔</span>
+                <div class="avatar">T</div>
+            </div>
+        </header>
+
+        <div class="page-content">
+            
+            <!-- Dashboard View -->
+            <section id="dashboard" class="view-section active">
+                <div class="page-header">
+                    <h1>Overview</h1>
+                    <button class="btn btn-secondary">Export Data</button>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="card">
+                        <div class="stat-label">Total Clicks</div>
+                        <div class="stat-value" data-count="12450">12,450</div>
+                        <div style="color: var(--color-primary); font-size: 0.8rem; font-weight: 500;">+12% this week</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-label">Earnings</div>
+                        <div class="stat-value" data-count="3240">₹3,240</div>
+                        <div style="color: var(--color-primary); font-size: 0.8rem; font-weight: 500;">+8% this week</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-label">Products Listed</div>
+                        <div class="stat-value" data-count="148">148</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">Updated today</div>
+                    </div>
+                    <div class="card">
+                        <div class="stat-label">Active Links</div>
+                        <div class="stat-value" data-count="89">89</div>
+                        <div style="color: var(--text-muted); font-size: 0.8rem; font-weight: 500;">Stable</div>
+                    </div>
+                </div>
+
+                <div class="dash-columns">
+                    <div class="card">
+                        <h2 style="margin-bottom: 24px;">Top Products</h2>
+                        <div class="list-row">
+                            <div style="flex-grow: 1;">
+                                <div style="font-weight: 600;">Sony WH-1000XM5</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">Headphones</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600;">3,421 clicks</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">₹450 earned</div>
+                            </div>
+                        </div>
+                        <div class="list-row">
+                            <div style="flex-grow: 1;">
+                                <div style="font-weight: 600;">iPhone 15 Pro Max</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">Smartphones</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-weight: 600;">2,100 clicks</div>
+                                <div style="color: var(--text-muted); font-size: 0.8rem;">₹890 earned</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 style="margin-bottom: 24px;">Activity</h2>
+                        <div class="list-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <div style="font-size: 0.9rem; color: var(--text-dark);">Generated summary for "MacBook Air"</div>
+                            <div style="color: var(--text-muted); font-size: 0.75rem;">2 hours ago</div>
+                        </div>
+                        <div class="list-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <div style="font-size: 0.9rem; color: var(--text-dark);">New affiliate link created</div>
+                            <div style="color: var(--text-muted); font-size: 0.75rem;">5 hours ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products View -->
+            <section id="products" class="view-section">
+                <div class="page-header">
+                    <h1>Product Listings</h1>
+                    <button class="btn btn-primary">Add Product</button>
+                </div>
+                
+                <div class="filters">
+                    <div class="filter-pill active">All Categories</div>
+                    <div class="filter-pill">Smartphones</div>
+                    <div class="filter-pill">Laptops</div>
+                    <div class="filter-pill">Audio</div>
+                </div>
+                
+                <div class="product-grid">
+                    <div class="card product-card hoverable">
+                        <div class="product-info">
+                            <span class="badge dark" style="margin-bottom: 12px;">Audio</span>
+                            <h3>Sony WH-1000XM5</h3>
+                            <div class="product-price">₹29,990</div>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%;">Get Link</button>
+                    </div>
+                    <div class="card product-card hoverable">
+                        <div class="product-info">
+                            <span class="badge dark" style="margin-bottom: 12px;">Laptops</span>
+                            <h3>MacBook Air M2</h3>
+                            <div class="product-price">₹1,14,900</div>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%;">Get Link</button>
+                    </div>
+                    <div class="card product-card hoverable">
+                        <div class="product-info">
+                            <span class="badge dark" style="margin-bottom: 12px;">Smartphones</span>
+                            <h3>Samsung Galaxy S24 Ultra</h3>
+                            <div class="product-price">₹1,29,999</div>
+                        </div>
+                        <button class="btn btn-secondary" style="width: 100%;">Get Link</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Compare View -->
+            <section id="compare" class="view-section">
+                <div class="page-header">
+                    <h1>Compare</h1>
+                    <button class="btn btn-secondary">Clear All</button>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>Features</th>
+                                <th>Sony WH-1000XM5</th>
+                                <th>Bose QC Ultra <span class="badge blue" style="margin-left:8px;">Best Pick</span></th>
+                                <th>AirPods Max</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500; color: var(--text-muted);">ANC Quality</td>
+                                <td>Excellent</td>
+                                <td style="font-weight: 600;">Unmatched</td>
+                                <td>Very Good</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500; color: var(--text-muted);">Battery Life</td>
+                                <td>30 Hours</td>
+                                <td style="font-weight: 600;">24 Hours</td>
+                                <td>20 Hours</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500; color: var(--text-muted);">Price (INR)</td>
+                                <td>₹29,990</td>
+                                <td style="font-weight: 600;">₹25,900</td>
+                                <td>₹59,900</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><button class="btn btn-secondary" style="width:100%">View</button></td>
+                                <td><button class="btn btn-primary" style="width:100%">View</button></td>
+                                <td><button class="btn btn-secondary" style="width:100%">View</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- AI Recommender View -->
+            <section id="ai-recommender" class="view-section">
+                <div class="ai-chat-container">
+                    <div style="text-align:center; margin-bottom:32px;">
+                        <h1>AI Assistant</h1>
+                        <p style="color: var(--text-muted);">Ask for recommendations or specs.</p>
+                    </div>
+                    
+                    <div class="chat-history">
+                        <div class="chat-bubble chat-user">
+                            I need a good laptop for coding under ₹80,000.
+                        </div>
+                        <div class="chat-bubble chat-ai">
+                            Based on your ₹80k budget for coding, the <strong>Lenovo IdeaPad Slim 5</strong> is my top recommendation. It features an AMD Ryzen 7 processor and 16GB RAM.
+                            <div class="card hoverable" style="margin-top: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-weight: 600;">Lenovo IdeaPad Slim 5</div>
+                                    <div class="product-price" style="font-size: 1rem; color: var(--text-muted);">₹76,990</div>
+                                </div>
+                                <button class="btn btn-secondary">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="ai-input-bar">
+                            <input type="text" placeholder="Type what you need..." />
+                            <button class="btn btn-primary" style="height: 36px; border-radius: 8px;">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Affiliate Link Manager View -->
+            <section id="links" class="view-section">
+                <div class="page-header">
+                    <h1>Link Manager</h1>
+                    <button class="btn btn-primary">New Link</button>
+                </div>
+                
+                <div class="card" style="padding: 0; overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Affiliate Link</th>
+                                <th>Clicks</th>
+                                <th>Earnings</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 500;">Sony WH-1000XM5</td>
+                                <td><a href="#" style="color: var(--color-primary); text-decoration: underline;">amzn.to/3z5P</a></td>
+                                <td>3,421</td>
+                                <td>₹450</td>
+                                <td><span class="badge blue">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 500;">Logitech MX Master 3S</td>
+                                <td><a href="#" style="color: var(--color-primary); text-decoration: underline;">amzn.to/8kLp</a></td>
+                                <td>1,204</td>
+                                <td>₹180</td>
+                                <td><span class="badge dark">Paused</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Blog View -->
+            <section id="blog" class="view-section">
+                <div class="page-header">
+                    <h1>Blog</h1>
+                    <button class="btn btn-primary">New Post</button>
+                </div>
+                
+                <div class="blog-hero">
+                    <div class="blog-hero-content">
+                        <span class="badge dark">Featured</span>
+                        <h2 style="font-size: 1.5rem; margin: 12px 0;">The State of Foldable Phones 2026</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 24px;">Are we ready to ditch the slab phone? We tested the top 5 foldables.</p>
+                        <button class="btn btn-secondary">Read Article</button>
+                    </div>
+                </div>
+                
+                <div class="blog-grid">
+                    <div class="card hoverable">
+                        <h3 style="margin-bottom: 8px; font-size: 1.1rem;">Nothing Ear (a) Review</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px;">Style over substance or true audio quality?</p>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Oct 12</span>
+                    </div>
+                    <div class="card hoverable">
+                        <h3 style="margin-bottom: 8px; font-size: 1.1rem;">Top 10 WFH Gadgets</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px;">Transform your desk into a powerhouse of productivity.</p>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Oct 10</span>
+                    </div>
+                    <div class="card hoverable">
+                        <h3 style="margin-bottom: 8px; font-size: 1.1rem;">Apple M4 Tested</h3>
+                        <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 16px;">Benchmarking the new M4 architecture.</p>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">Oct 8</span>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="settings" class="view-section">
+                <div class="page-header">
+                    <h1>Settings</h1>
+                </div>
+                <div class="card">
+                    <p style="color: var(--text-muted);">Application preferences and general settings.</p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navItems = document.querySelectorAll('.nav-item');
+        const viewSections = document.querySelectorAll('.view-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetId = item.getAttribute('data-target');
+                if(!targetId) return;
+
+                navItems.forEach(nav => nav.classList.remove('active'));
+                viewSections.forEach(section => section.classList.remove('active'));
+
+                item.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        const statValues = document.querySelectorAll('.stat-value');
+        statValues.forEach(stat => {
+            const finalCount = stat.getAttribute('data-count');
+            if(finalCount) {
+                let start = 0;
+                const end = parseInt(finalCount, 10);
+                if (isNaN(end)) return;
+                const duration = 800;
+                const stepTime = 20;
+                const steps = duration / stepTime;
+                const increment = end / steps;
+                
+                const timer = setInterval(() => {
+                    start += increment;
+                    if(start >= end) {
+                        clearInterval(timer);
+                        stat.innerText = new Intl.NumberFormat('en-IN').format(end); 
+                    } else {
+                        stat.innerText = Math.floor(start);
+                    }
+                }, stepTime);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

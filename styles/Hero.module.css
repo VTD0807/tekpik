@@ -1,0 +1,206 @@
+/* Hero Section */
+.hero {
+  padding: 100px 5vw 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.heroContent {
+}
+
+.heroLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--blue-light);
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.heroLabelIcon {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  flex: 0 0 auto;
+}
+
+.heroContent h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.heroContent h1 em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+.heroSub {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 300;
+  line-height: 1.7;
+  max-width: 400px;
+  margin-bottom: 36px;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btnPrimary {
+  background: var(--blue);
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.25);
+}
+
+.btnAppStore {
+  background: #27ae60;
+  color: #ffffff;
+  padding: 13px 26px;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: inline-block;
+}
+
+.btnAppStore:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(39, 174, 96, 0.25);
+  background: #229954;
+}
+
+.btnGhost {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.btnGhost:hover {
+  color: var(--text);
+}
+
+.heroVisual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.heroCard {
+  background: linear-gradient(165deg, #ffffff 0%, #f9fafb 100%);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: floatUp 0.6s ease both;
+}
+
+.heroCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.heroCard:nth-child(2) {
+  animation-delay: 0.2s;
+  margin-top: 24px;
+}
+
+.heroCard:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.heroCard:nth-child(4) {
+  animation-delay: 0.4s;
+  margin-top: 24px;
+}
+
+.heroCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.cardIconWrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: linear-gradient(145deg, #f0f9ff, #e0f2fe);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  font-size: 1.4rem;
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.cardPrice {
+  font-size: 0.75rem;
+  color: var(--green);
+  font-weight: 500;
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 60px 5vw 40px;
+    gap: 40px;
+  }
+
+  .heroVisual {
+    display: none;
+  }
+}
