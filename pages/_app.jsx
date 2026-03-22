@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>TekPik • Smart Gadget Reviews & Affiliates</title>
+        <link rel="icon" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
         <meta name="description" content="TekPik — The ultimate smart tech gadget review and unbiased affiliate marketing platform. Discover the best tech deals, professional reviews, and AI-driven recommendations tailored for you." />
         <meta property="og:title" content="TekPik • Smart Gadget Reviews & Affiliates" />
         <meta property="og:description" content="TekPik — The ultimate smart tech gadget review and unbiased affiliate marketing platform. Discover the best tech deals, professional reviews, and AI-driven recommendations tailored for you." />
