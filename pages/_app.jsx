@@ -20,13 +20,13 @@ function MyApp({ Component, pageProps }) {
         <meta name="description" content="TekPik — The ultimate smart tech gadget review and unbiased affiliate marketing platform. Discover the best tech deals, professional reviews, and AI-driven recommendations tailored for you." />
         <meta property="og:title" content="TekPik • Smart Gadget Reviews & Affiliates" />
         <meta property="og:description" content="TekPik — The ultimate smart tech gadget review and unbiased affiliate marketing platform. Discover the best tech deals, professional reviews, and AI-driven recommendations tailored for you." />
-        <meta property="og:image" content="/TEKPIK-LOGO.png" />
+        <meta property="og:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="TekPik" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="TekPik • Smart Gadget Reviews & Affiliates" />
         <meta name="twitter:description" content="TekPik — The ultimate smart tech gadget review and unbiased affiliate marketing platform. Discover the best tech deals, professional reviews, and AI-driven recommendations tailored for you." />
-        <meta name="twitter:image" content="/TEKPIK-LOGO.png" />
+        <meta name="twitter:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
       </Head>
       {getLayout(<Component {...pageProps} />)}
     </>
