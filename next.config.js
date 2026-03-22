@@ -2,29 +2,14 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: 'export',
   images: {
+    unoptimized: true,
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.amazon.in',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.flipkart.com',
-      },
-      {
-        protocol: 'https',
-        hostname: '**.vercel.app',
-      },
+      { protocol: 'https', hostname: '**.amazon.in' },
+      { protocol: 'https', hostname: '**.flipkart.com' },
+      { protocol: 'https', hostname: '**.vercel.app' },
     ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/',
-        destination: '/index.html',
-      },
-    ]
   },
 };
 
