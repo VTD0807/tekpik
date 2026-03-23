@@ -42,8 +42,57 @@
   {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "Organization", "name": "TekPik", "url": "https://tekpik.in/", "description": "Independent tech gadget reviews and buying guides for Indian users." },
-      { "@type": "WebSite", "name": "TekPik", "url": "https://tekpik.in/", "description": "Smart tech gadget reviews and buying guides for India" }
+      { 
+        "@type": "Organization", 
+        "name": "TekPik", 
+        "url": "https://tekpik.in/", 
+        "description": "Independent tech gadget reviews and buying guides for Indian users.",
+        "sameAs": [
+          "https://x.com/weoqens",
+          "https://www.instagram.com/we.oqens/",
+          "https://www.youtube.com/@weoqens",
+          "https://www.linkedin.com/company/weoqens/"
+        ]
+      },
+      { 
+        "@type": "WebSite", 
+        "name": "TekPik", 
+        "url": "https://tekpik.in/", 
+        "description": "Smart tech gadget reviews and buying guides for India"
+      },
+      {
+        "@type": "ItemList",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Discover Products",
+            "description": "Explore curated tech gadgets, best buys, and expert reviews.",
+            "url": "https://app.tekpik.in/products"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Offers",
+            "description": "Access exclusive tech deals, discounts, and daily price drops.",
+            "url": "https://app.tekpik.in/offers"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Signup / Login",
+            "description": "Join the TekPik community to track prices and save your favorite gadgets.",
+            "url": "https://app.tekpik.in/auth"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "Help & Policies",
+            "description": "Read our terms, privacy policy, and get support.",
+            "url": "https://tekpik.in/help"
+          }
+        ]
+      }
     ]
   }
   </script>
