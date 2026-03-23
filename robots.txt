@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Sitemap absolute URL for search engines
+Sitemap: https://tekpik.in/sitemap.xml
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
