@@ -1085,16 +1085,21 @@
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Newsletter submit — also opens Google Sheet in new tab
-    const GOOGLE_SHEET_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.EMAIL_FIELD=';
+    // Newsletter submit — sends email to Google Sheet
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyIBDiTkyK_kl0pcb09YFbBQQ6YJ-DGmLGiZRQjhsrzsyHlTzVxuDAjdSi_3C2mlSexYA/exec';
     const ctaBtn = document.querySelector('.cta-form button');
     if (ctaBtn) {
       ctaBtn.addEventListener('click', () => {
         const input = document.querySelector('.cta-form input');
         if (input && input.value.includes('@')) {
           const email = input.value.trim();
-          // Open Google Sheet/Form in new tab with the email pre-filled
-          window.open(GOOGLE_SHEET_URL + encodeURIComponent(email), '_blank');
+          // Send email to Google Sheet
+          fetch(SHEET_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ email: email })
+          });
           const old = input.placeholder;
           input.value = '';
           input.placeholder = '✓ You\'re subscribed!';
