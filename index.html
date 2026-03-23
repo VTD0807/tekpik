@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TekPik — Smart Tech & Gadget Reviews India</title>
+  <meta name="description" content="TekPik helps you discover the best tech gadgets, budget picks, and honest reviews tailored for India. Smart buying starts here." />
+  <link rel="canonical" href="https://tekpik.in/" />
+  <link rel="icon" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TekPik — Smart Gadget Reviews & Affiliates" />
+  <meta property="og:description" content="Discover the best tech deals, professional reviews, and recommendations tailored for Indian buyers." />
+  <meta property="og:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tekpik.in/" />
+  <meta property="og:site_name" content="TekPik" />
+  <meta property="og:locale" content="en_IN" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TekPik — Smart Gadget Reviews & Affiliates" />
+  <meta name="twitter:description" content="Compare top gadgets, read honest reviews, and discover curated deals for Indian buyers." />
+  <meta name="twitter:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
+
+  <!-- SEO -->
+  <meta name="robots" content="index, follow" />
+  <meta name="keywords" content="tech gadgets india, best budget gadgets, tech reviews india, amazon gadgets, budget earphones, smartphone accessories india" />
+  <meta name="author" content="TekPik" />
+  <meta name="theme-color" content="#FAFAF9" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Organization", "name": "TekPik", "url": "https://tekpik.in/", "description": "Independent tech gadget reviews and buying guides for Indian users." },
+      { "@type": "WebSite", "name": "TekPik", "url": "https://tekpik.in/", "description": "Smart tech gadget reviews and buying guides for India" }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ─── DESIGN TOKENS ─── */
+    :root {
+      --bg: #FAFAF9;
+      --surface: #FFFFFF;
+      --surface-alt: #F5F5F4;
+      --border: #E7E5E4;
+      --border-light: #F0EEEC;
+      --text: #0C0A09;
+      --text-secondary: #57534E;
+      --text-muted: #A8A29E;
+      --accent: #2563EB;
+      --accent-light: #EFF6FF;
+      --accent-hover: #1D4ED8;
+      --green: #16A34A;
+      --green-light: #F0FDF4;
+      --orange: #EA580C;
+      --orange-light: #FFF7ED;
+      --purple: #7C3AED;
+      --purple-light: #F5F3FF;
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --radius-full: 100px;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ─── CONTAINER ─── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(250, 250, 249, 0.72);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(231, 229, 228, 0.5);
+      transition: background 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .nav.scrolled {
+      background: rgba(250, 250, 249, 0.92);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .nav-inner {
+      max-width: 1120px; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.3rem; letter-spacing: -0.04em;
+      color: var(--text); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .logo-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); display: inline-block;
+    }
+    .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-secondary);
+      font-size: 0.84rem; font-weight: 450; letter-spacing: -0.01em;
+      transition: color 0.2s var(--ease);
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--text) !important; color: var(--bg) !important;
+      padding: 7px 18px !important; border-radius: var(--radius-full) !important;
+      font-weight: 500 !important; font-size: 0.8rem !important;
+      letter-spacing: -0.01em !important;
+      transition: opacity 0.2s var(--ease), transform 0.2s var(--ease) !important;
+    }
+    .nav-cta:hover { opacity: 0.85 !important; transform: translateY(-1px) !important; }
+
+    /* Mobile Menu */
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle svg { width: 22px; height: 22px; stroke: var(--text); }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 140px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(37, 99, 235, 0.04) 0%, rgba(37, 99, 235, 0.015) 40%, transparent 80%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 680px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.73rem; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--accent);
+      background: var(--accent-light); padding: 6px 16px; border-radius: var(--radius-full);
+      margin-bottom: 28px;
+      border: 1px solid rgba(37, 99, 235, 0.08);
+    }
+    .hero-badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease infinite;
+    }
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 5.5vw, 4rem);
+      font-weight: 800; line-height: 1.05;
+      letter-spacing: -0.045em;
+      color: var(--text); margin-bottom: 20px;
+    }
+    h1 .accent { color: var(--accent); }
+    .hero-desc {
+      font-size: 1.05rem; font-weight: 350; color: var(--text-secondary);
+      line-height: 1.7; max-width: 480px; margin: 0 auto 40px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--text); color: var(--bg);
+      padding: 13px 30px; border-radius: var(--radius-full);
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+      letter-spacing: -0.01em; border: none; cursor: pointer;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    .btn-primary svg { width: 16px; height: 16px; stroke: currentColor; fill: none; }
+    .btn-secondary {
+      color: var(--text-secondary); font-size: 0.88rem; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px; font-weight: 450;
+      transition: color 0.2s var(--ease), gap 0.2s var(--ease);
+    }
+    .btn-secondary:hover { color: var(--text); gap: 10px; }
+
+
+
+    /* ─── TICKER STRIP ─── */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      padding: 20px 0; overflow: hidden;
+    }
+    .ticker-track {
+      display: flex; gap: 56px; align-items: center;
+      animation: scroll-x 25s linear infinite;
+      width: max-content;
+    }
+    .ticker-item {
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.82rem; color: var(--text-muted);
+      font-weight: 450; white-space: nowrap; letter-spacing: -0.01em;
+    }
+    .ticker-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .ticker-num {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.1rem; color: var(--text); letter-spacing: -0.03em;
+    }
+    .ticker-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); opacity: 0.4; flex-shrink: 0; }
+
+    /* ─── SECTION ─── */
+    .section { padding: 88px 24px; }
+    .section-header { text-align: center; margin-bottom: 48px; }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+    }
+    .section-tag::before {
+      content: ''; width: 16px; height: 1px;
+      background: var(--text-muted); opacity: 0.4;
+    }
+    .section-tag::after {
+      content: ''; width: 16px; height: 1px;
+      background: var(--text-muted); opacity: 0.4;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 700; letter-spacing: -0.035em; line-height: 1.15;
+      color: var(--text);
+    }
+    .section-desc { font-size: 0.92rem; color: var(--text-secondary); margin-top: 10px; font-weight: 350; }
+
+    /* ─── REVIEW CARDS ─── */
+    .reviews-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .review-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      text-decoration: none; color: inherit; display: block;
+      transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+    }
+    .review-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+      border-color: transparent;
+    }
+    .review-thumb {
+      width: 100%; aspect-ratio: 16/10; display: flex;
+      align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--border-light);
+      position: relative; overflow: hidden;
+    }
+    .review-thumb i { font-size: 2.8rem; opacity: 0.6; position: relative; z-index: 1; }
+    .review-thumb.t-blue i { color: #2563EB; }
+    .review-thumb.t-green i { color: #16A34A; }
+    .review-thumb.t-warm i { color: #EA580C; }
+    .review-thumb.t-blue { background: linear-gradient(135deg, #EFF6FF, #DBEAFE); }
+    .review-thumb.t-green { background: linear-gradient(135deg, #F0FDF4, #DCFCE7); }
+    .review-thumb.t-warm { background: linear-gradient(135deg, #FFF7ED, #FFEDD5); }
+    .review-body { padding: 22px; }
+    .review-tags { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.02em;
+      padding: 3px 10px; border-radius: var(--radius-full);
+      background: var(--surface-alt); color: var(--text-secondary);
+    }
+    .review-title {
+      font-family: var(--font-display); font-size: 0.95rem;
+      font-weight: 600; line-height: 1.35; letter-spacing: -0.02em;
+      margin-bottom: 8px; color: var(--text);
+    }
+    .review-excerpt {
+      font-size: 0.82rem; color: var(--text-secondary);
+      font-weight: 350; line-height: 1.65;
+    }
+    .review-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-light);
+      font-size: 0.72rem; color: var(--text-muted); font-weight: 400;
+    }
+
+    /* ─── CATEGORIES ─── */
+    .cat-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .cat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 28px 22px;
+      text-decoration: none; color: inherit; display: block;
+      transition: border-color 0.3s var(--ease), transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .cat-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.06);
+    }
+    .cat-icon {
+      width: 44px; height: 44px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .cat-icon i { font-size: 1.25rem; }
+    .cat-icon.c-blue { background: var(--accent-light); color: var(--accent); }
+    .cat-icon.c-purple { background: var(--purple-light); color: var(--purple); }
+    .cat-icon.c-green { background: var(--green-light); color: var(--green); }
+    .cat-icon.c-orange { background: var(--orange-light); color: var(--orange); }
+    .cat-name {
+      font-family: var(--font-display); font-size: 0.88rem;
+      font-weight: 600; letter-spacing: -0.02em; margin-bottom: 3px;
+    }
+    .cat-count { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; }
+
+    /* ─── STEPS ─── */
+    .steps-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .steps-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    }
+    .step {
+      padding: 44px 36px; text-align: center;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: ''; position: absolute; right: 0; top: 20%; height: 60%;
+      width: 1px; background: var(--border);
+    }
+    .step-number {
+      font-family: var(--font-display); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 20px;
+    }
+    .step-icon-wrap {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent-light); display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .step-icon-wrap i { font-size: 1.3rem; color: var(--accent); }
+    .step-title {
+      font-family: var(--font-display); font-size: 1rem;
+      font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px;
+    }
+    .step-desc { font-size: 0.82rem; color: var(--text-secondary); font-weight: 350; line-height: 1.65; }
+
+    /* ─── NEWSLETTER CTA ─── */
+    .cta-section {
+      padding: 0 24px 88px;
+    }
+    .cta-card {
+      max-width: 1120px; margin: 0 auto;
+      background: var(--text); color: var(--bg);
+      border-radius: 24px; padding: 64px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute; top: -100px; right: -100px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(37, 99, 235, 0.12);
+      filter: blur(60px); pointer-events: none;
+    }
+    .cta-card::after {
+      content: '';
+      position: absolute; bottom: -80px; left: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(124, 58, 237, 0.08);
+      filter: blur(50px); pointer-events: none;
+    }
+    .cta-content { position: relative; z-index: 1; }
+    .cta-content h2 { color: var(--bg); margin-bottom: 10px; }
+    .cta-content p { font-size: 0.88rem; color: rgba(250,250,249,0.5); font-weight: 350; line-height: 1.7; }
+    .cta-form-wrap { position: relative; z-index: 1; }
+    .cta-form { display: flex; gap: 10px; }
+    .cta-form input {
+      flex: 1; background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-full); padding: 14px 20px;
+      font-family: var(--font-body); font-size: 0.88rem;
+      color: var(--bg); outline: none;
+      transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+    }
+    .cta-form input::placeholder { color: rgba(250,250,249,0.25); }
+    .cta-form input:focus { border-color: rgba(255,255,255,0.25); background: rgba(255,255,255,0.1); }
+    .cta-form button {
+      background: var(--bg); color: var(--text); border: none;
+      border-radius: var(--radius-full); padding: 14px 28px;
+      font-family: var(--font-body); font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; white-space: nowrap; letter-spacing: -0.01em;
+      transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+    }
+    .cta-form button:hover { opacity: 0.88; transform: translateY(-1px); }
+    .cta-note {
+      font-size: 0.72rem; color: rgba(250,250,249,0.3);
+      margin-top: 12px; font-weight: 350;
+    }
+
+    /* ─── MARKETPLACE PARTNERS ─── */
+    .partners { padding: 72px 24px; text-align: center; }
+    .partners-label {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 32px;
+    }
+    .partners-grid {
+      max-width: 900px; margin: 0 auto;
+      display: flex; justify-content: center; align-items: center;
+      gap: 48px; flex-wrap: wrap;
+    }
+    .partner-logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none;
+    }
+    .partner-logo svg { height: 28px; width: auto; }
+    .partner-logo img { height: 72px; width: auto; }
+    .partner-name {
+      font-family: var(--font-display); font-size: 1.1rem;
+      font-weight: 700; color: var(--text); letter-spacing: -0.02em;
+    }
+
+    /* ─── WHY CHOOSE ─── */
+    .why-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+    }
+    .why-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 36px 32px;
+      display: flex; gap: 20px; align-items: flex-start;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .why-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+    .why-icon {
+      width: 48px; height: 48px; border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .why-icon i { font-size: 1.3rem; }
+    .why-icon.wi-blue { background: var(--accent-light); color: var(--accent); }
+    .why-icon.wi-green { background: var(--green-light); color: var(--green); }
+    .why-icon.wi-purple { background: var(--purple-light); color: var(--purple); }
+    .why-icon.wi-orange { background: var(--orange-light); color: var(--orange); }
+    .why-title {
+      font-family: var(--font-display); font-size: 0.95rem;
+      font-weight: 600; letter-spacing: -0.02em; margin-bottom: 6px;
+    }
+    .why-desc { font-size: 0.82rem; color: var(--text-secondary); font-weight: 350; line-height: 1.65; }
+
+    /* ─── TRENDING DEALS ─── */
+    .deals-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    }
+    .deal-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 24px 20px;
+      text-decoration: none; color: inherit; display: block;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    }
+    .deal-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); border-color: transparent; }
+    .deal-badge {
+      display: inline-block; font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: var(--radius-full); margin-bottom: 14px;
+    }
+    .deal-badge.db-red { background: #FEF2F2; color: #DC2626; }
+    .deal-badge.db-blue { background: var(--accent-light); color: var(--accent); }
+    .deal-badge.db-green { background: var(--green-light); color: var(--green); }
+    .deal-badge.db-orange { background: var(--orange-light); color: var(--orange); }
+    .deal-icon { font-size: 2rem; margin-bottom: 12px; display: block; color: var(--text-muted); opacity: 0.5; }
+    .deal-name {
+      font-family: var(--font-display); font-size: 0.88rem;
+      font-weight: 600; letter-spacing: -0.02em; margin-bottom: 4px;
+    }
+    .deal-price { font-size: 0.8rem; color: var(--text-secondary); font-weight: 400; margin-bottom: 8px; }
+    .deal-price strong { color: var(--text); font-weight: 600; }
+    .deal-price del { color: var(--text-muted); font-weight: 350; }
+    .deal-store {
+      font-size: 0.68rem; color: var(--text-muted); font-weight: 400;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .deal-store i { font-size: 0.72rem; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials-grid {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    }
+    .testimonial-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 32px 28px;
+      transition: transform 0.3s var(--ease);
+    }
+    .testimonial-card:hover { transform: translateY(-3px); }
+    .testimonial-stars { color: #FBBF24; font-size: 0.85rem; letter-spacing: 2px; margin-bottom: 16px; }
+    .testimonial-text {
+      font-size: 0.88rem; color: var(--text-secondary); font-weight: 350;
+      line-height: 1.7; margin-bottom: 20px; font-style: italic;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+    .testimonial-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--accent-light); display: flex;
+      align-items: center; justify-content: center;
+      font-family: var(--font-display); font-size: 0.8rem;
+      font-weight: 700; color: var(--accent);
+    }
+    .testimonial-avatar.ta-green { background: var(--green-light); color: var(--green); }
+    .testimonial-avatar.ta-purple { background: var(--purple-light); color: var(--purple); }
+    .testimonial-name { font-size: 0.82rem; font-weight: 600; }
+    .testimonial-role { font-size: 0.7rem; color: var(--text-muted); font-weight: 350; }
+
+    /* ─── FAQ ─── */
+    .faq-list { max-width: 680px; margin: 0 auto; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none;
+      padding: 20px 0; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-body); font-size: 0.92rem;
+      font-weight: 500; color: var(--text); text-align: left;
+    }
+    .faq-q i { font-size: 1rem; color: var(--text-muted); transition: transform 0.3s var(--ease); }
+    .faq-q.active i { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
+    }
+    .faq-a.open { max-height: 200px; padding-bottom: 20px; }
+    .faq-a p { font-size: 0.84rem; color: var(--text-secondary); font-weight: 350; line-height: 1.7; }
+
+    /* ─── EXPANDED FOOTER ─── */
+    .footer-top {
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+      padding-bottom: 32px; margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .footer-about { max-width: 280px; }
+    .footer-about-desc { font-size: 0.82rem; color: var(--text-secondary); font-weight: 350; line-height: 1.65; margin-top: 12px; }
+    .footer-col-title {
+      font-family: var(--font-display); font-size: 0.78rem;
+      font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--text); margin-bottom: 14px;
+    }
+    .footer-col-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col-links a {
+      font-size: 0.82rem; color: var(--text-secondary); text-decoration: none;
+      font-weight: 400; transition: color 0.2s var(--ease);
+    }
+    .footer-col-links a:hover { color: var(--text); }
+    .footer-social { display: flex; gap: 12px; margin-top: 16px; }
+    .footer-social a {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--surface-alt); display: flex;
+      align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.9rem;
+      text-decoration: none; transition: background 0.2s var(--ease), color 0.2s var(--ease);
+    }
+    .footer-social a:hover { background: var(--accent-light); color: var(--accent); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px; background: var(--surface);
+    }
+    .footer-inner {
+      max-width: 1120px; margin: 0 auto; display: flex;
+      justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-brand { display: flex; flex-direction: column; gap: 4px; }
+    .footer-copy { font-size: 0.75rem; color: var(--text-muted); font-weight: 350; }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 0.78rem; color: var(--text-muted);
+      text-decoration: none; font-weight: 400;
+      transition: color 0.2s var(--ease);
+    }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    @keyframes scroll-x {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta-card { grid-template-columns: 1fr; padding: 44px 28px; gap: 28px; }
+      .why-grid { grid-template-columns: 1fr; }
+      .deals-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-toggle { display: block; }
+      .hero { padding: 120px 20px 70px; }
+      h1 { font-size: clamp(2rem, 8vw, 2.8rem); }
+      .reviews-grid { grid-template-columns: 1fr; }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .steps-grid { grid-template-columns: 1fr; gap: 0; }
+      .step:not(:last-child)::after { display: none; }
+      .step { padding: 32px 24px; border-bottom: 1px solid var(--border-light); }
+      .cta-form { flex-direction: column; }
+      .cta-card::before, .cta-card::after { display: none; }
+      .partners-grid { gap: 28px; }
+      .footer-top { grid-template-columns: 1fr; gap: 28px; }
+    }
+    @media (max-width: 480px) {
+      .cat-grid { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; width: 100%; }
+      .btn-primary { width: 100%; justify-content: center; }
+      .deals-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ NAV ═══════ -->
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Tekpik<span class="logo-dot"></span></a>
+      <ul class="nav-links">
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="/beta/">Join Beta</a></li>
+        <li><a href="#newsletter" class="nav-cta">Get Updates</a></li>
+      </ul>
+      <button class="nav-toggle" aria-label="Menu" onclick="this.classList.toggle('active')">
+        <i class="bi bi-list" style="font-size:1.4rem"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" aria-label="Hero">
+
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        India's Smart Tech Guide
+      </div>
+      <h1>Pick Smarter.<br><span class="accent">Buy Better.</span></h1>
+      <p class="hero-desc">
+        Honest reviews, budget picks, and expert buying guides for tech gadgets — made for Indian buyers.
+      </p>
+      <div class="hero-actions">
+        <a href="/beta/" class="btn-primary">
+          Join the Beta
+          <i class="bi bi-arrow-right" style="font-size:0.95rem"></i>
+        </a>
+        <a href="#reviews" class="btn-secondary">Explore Reviews →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TICKER ═══════ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <div class="ticker-item"><span class="ticker-num">200+</span> Products Reviewed</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">50K+</span> Monthly Readers</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">100%</span> Honest Reviews</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">₹0</span> Always Free</div>
+      <span class="ticker-dot"></span>
+      <!-- Duplicate for seamless loop -->
+      <div class="ticker-item"><span class="ticker-num">200+</span> Products Reviewed</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">50K+</span> Monthly Readers</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">100%</span> Honest Reviews</div>
+      <span class="ticker-dot"></span>
+      <div class="ticker-item"><span class="ticker-num">₹0</span> Always Free</div>
+      <span class="ticker-dot"></span>
+    </div>
+  </div>
+
+  <!-- ═══════ WHAT WE COVER ═══════ -->
+  <section class="section" id="reviews" aria-label="What We Cover">
+    <div class="section-header reveal">
+      <div class="section-tag">Discover</div>
+      <h2>What We Cover</h2>
+      <p class="section-desc">Deep-dive guides across the tech categories that matter most to Indian buyers.</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal d1">
+        <div class="review-thumb t-blue">
+          <i class="bi bi-headphones"></i>
+        </div>
+        <div class="review-body">
+          <div class="review-tags"><span class="tag">Audio</span><span class="tag">Wearables</span></div>
+          <div class="review-title">Audio & Earphones</div>
+          <div class="review-excerpt">From TWS earbuds to over-ear headphones — we help you find the best sound at every price point, tested for Indian commutes and lifestyles.</div>
+        </div>
+      </div>
+
+      <div class="review-card reveal d2">
+        <div class="review-thumb t-green">
+          <i class="bi bi-lightbulb"></i>
+        </div>
+        <div class="review-body">
+          <div class="review-tags"><span class="tag">Smart Home</span><span class="tag">IoT</span></div>
+          <div class="review-title">Smart Home Devices</div>
+          <div class="review-excerpt">Smart plugs, LED strips, security cameras — every device tested for Indian voltage, Wi-Fi conditions, and compatibility with local ecosystems.</div>
+        </div>
+      </div>
+
+      <div class="review-card reveal d3">
+        <div class="review-thumb t-warm">
+          <i class="bi bi-phone"></i>
+        </div>
+        <div class="review-body">
+          <div class="review-tags"><span class="tag">Mobile</span><span class="tag">Accessories</span></div>
+          <div class="review-title">Phone Accessories</div>
+          <div class="review-excerpt">Cases, chargers, holders, and more — essential accessories for your smartphone, curated for quality and value across every budget range.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CATEGORIES ═══════ -->
+  <section class="section" id="categories" style="background: var(--surface-alt);" aria-label="Categories">
+    <div class="section-header reveal">
+      <div class="section-tag">Browse</div>
+      <h2>Shop by Category</h2>
+    </div>
+    <div class="cat-grid">
+      <a href="#" class="cat-card reveal d1">
+        <div class="cat-icon c-blue">
+          <i class="bi bi-headphones"></i>
+        </div>
+        <div class="cat-name">Audio & Earphones</div>
+        <div class="cat-count">24 reviews</div>
+      </a>
+      <a href="#" class="cat-card reveal d2">
+        <div class="cat-icon c-purple">
+          <i class="bi bi-phone"></i>
+        </div>
+        <div class="cat-name">Phone Accessories</div>
+        <div class="cat-count">38 reviews</div>
+      </a>
+      <a href="#" class="cat-card reveal d3">
+        <div class="cat-icon c-green">
+          <i class="bi bi-lightbulb"></i>
+        </div>
+        <div class="cat-name">Smart Home</div>
+        <div class="cat-count">17 reviews</div>
+      </a>
+      <a href="#" class="cat-card reveal">
+        <div class="cat-icon c-orange">
+          <i class="bi bi-laptop"></i>
+        </div>
+        <div class="cat-name">Laptop & Desk</div>
+        <div class="cat-count">21 reviews</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ HOW IT WORKS ═══════ -->
+  <section class="section steps-section" id="how-it-works" aria-label="How It Works">
+    <div class="section-header reveal">
+      <div class="section-tag">Process</div>
+      <h2>How TekPik Works</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step reveal d1">
+        <div class="step-number">Step 01</div>
+        <div class="step-icon-wrap">
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="step-title">We Test Everything</div>
+        <div class="step-desc">Every product is reviewed hands-on with real-world Indian use cases in mind.</div>
+      </div>
+      <div class="step reveal d2">
+        <div class="step-number">Step 02</div>
+        <div class="step-icon-wrap">
+          <i class="bi bi-layout-split"></i>
+        </div>
+        <div class="step-title">Compare Side-by-Side</div>
+        <div class="step-desc">Easily compare specs, prices, and ratings across multiple products.</div>
+      </div>
+      <div class="step reveal d3">
+        <div class="step-number">Step 03</div>
+        <div class="step-icon-wrap">
+          <i class="bi bi-star"></i>
+        </div>
+        <div class="step-title">Buy with Confidence</div>
+        <div class="step-desc">Follow our curated "Best Pick" badges to get the best deals on verified platforms.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ MARKETPLACE PARTNERS ═══════ -->
+  <section class="partners" id="partners" aria-label="Marketplace Partners">
+    <div class="partners-label reveal">We compare prices across India’s top marketplaces</div>
+    <div class="partners-grid reveal">
+      <!-- Amazon -->
+      <a href="https://amazon.in" target="_blank" rel="noopener" class="partner-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/3840px-Amazon_logo.svg.png" alt="Amazon India" style="height:26px" />
+      </a>
+      <!-- Flipkart -->
+      <a href="https://flipkart.com" target="_blank" rel="noopener" class="partner-logo">
+        <img src="https://download.logo.wine/logo/Flipkart/Flipkart-Logo.wine.png" alt="Flipkart" style="height:90px" />
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ WHY CHOOSE TEKPIK ═══════ -->
+  <section class="section" id="why" style="background: var(--surface-alt);" aria-label="Why TekPik">
+    <div class="section-header reveal">
+      <div class="section-tag">Why Us</div>
+      <h2>Why TekPik?</h2>
+      <p class="section-desc">We do the research so you don't have to.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal d1">
+        <div class="why-icon wi-blue"><i class="bi bi-shield-check"></i></div>
+        <div>
+          <div class="why-title">100% Unbiased Reviews</div>
+          <div class="why-desc">We never accept sponsored reviews. Every product is tested independently with real-world use cases specific to Indian users.</div>
+        </div>
+      </div>
+      <div class="why-card reveal d2">
+        <div class="why-icon wi-green"><i class="bi bi-cash-stack"></i></div>
+        <div>
+          <div class="why-title">Budget-First Approach</div>
+          <div class="why-desc">We focus on value for money. Our picks cover every budget range from ₹299 to ₹29,999 — because smart buying isn't about spending more.</div>
+        </div>
+      </div>
+      <div class="why-card reveal d1">
+        <div class="why-icon wi-purple"><i class="bi bi-graph-up-arrow"></i></div>
+        <div>
+          <div class="why-title">Real-Time Price Tracking</div>
+          <div class="why-desc">We monitor prices across Amazon and Flipkart so you always buy at the lowest price. Get alerts when prices drop.</div>
+        </div>
+      </div>
+      <div class="why-card reveal d2">
+        <div class="why-icon wi-orange"><i class="bi bi-people"></i></div>
+        <div>
+          <div class="why-title">Community Driven</div>
+          <div class="why-desc">Join 50,000+ Indian tech enthusiasts who trust TekPik for honest recommendations, community reviews, and buying advice.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ WHAT YOU GET ═══════ -->
+  <section class="section" id="deals" aria-label="What You Get">
+    <div class="section-header reveal">
+      <div class="section-tag">Features</div>
+      <h2>What You Get with TekPik</h2>
+      <p class="section-desc">Everything you need to make smarter tech purchases, all in one place.</p>
+    </div>
+    <div class="deals-grid">
+      <div class="deal-card reveal d1">
+        <span class="deal-badge db-blue">Core</span>
+        <i class="bi bi-search deal-icon"></i>
+        <div class="deal-name">Smart Search</div>
+        <div class="deal-store">Find the perfect gadget by budget, brand, or category with our intelligent filtering system.</div>
+      </div>
+      <div class="deal-card reveal d2">
+        <span class="deal-badge db-green">Live</span>
+        <i class="bi bi-arrow-left-right deal-icon"></i>
+        <div class="deal-name">Price Comparison</div>
+        <div class="deal-store">See real-time prices from Amazon and Flipkart side by side. Never overpay again.</div>
+      </div>
+      <div class="deal-card reveal d3">
+        <span class="deal-badge db-orange">Alert</span>
+        <i class="bi bi-bell deal-icon"></i>
+        <div class="deal-name">Deal Alerts</div>
+        <div class="deal-store">Get notified instantly when prices drop on products you're tracking across platforms.</div>
+      </div>
+      <div class="deal-card reveal">
+        <span class="deal-badge db-red">Expert</span>
+        <i class="bi bi-clipboard2-check deal-icon"></i>
+        <div class="deal-name">Buying Guides</div>
+        <div class="deal-store">Step-by-step buying guides tailored for Indian buyers with budget-specific recommendations.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ WHAT MAKES US DIFFERENT ═══════ -->
+  <section class="section" style="background: var(--surface-alt);" aria-label="What Makes Us Different">
+    <div class="section-header reveal">
+      <div class="section-tag">The TekPik Difference</div>
+      <h2>Built for Indian Buyers</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal d1">
+        <div class="testimonial-stars"><i class="bi bi-pin-map-fill"></i></div>
+        <div class="testimonial-text" style="font-style:normal; font-weight:400; color:var(--text)">India-First Reviews</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:350; line-height:1.65">Every product is tested for Indian conditions — voltage compatibility, humidity, network bands, and real-world pricing in INR.</div>
+      </div>
+      <div class="testimonial-card reveal d2">
+        <div class="testimonial-stars"><i class="bi bi-wallet2"></i></div>
+        <div class="testimonial-text" style="font-style:normal; font-weight:400; color:var(--text)">Every Budget Covered</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:350; line-height:1.65">From ₹299 earphones to ₹29,999 laptops, we cover every price range so you find the best gadget no matter your budget.</div>
+      </div>
+      <div class="testimonial-card reveal d3">
+        <div class="testimonial-stars"><i class="bi bi-lightning-charge-fill"></i></div>
+        <div class="testimonial-text" style="font-style:normal; font-weight:400; color:var(--text)">Always Up to Date</div>
+        <div style="font-size:0.82rem; color:var(--text-secondary); font-weight:350; line-height:1.65">Prices and availability change fast. TekPik tracks Amazon and Flipkart in real time so our recommendations are always current.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FAQ ═══════ -->
+  <section class="section" id="faq" aria-label="FAQ">
+    <div class="section-header reveal">
+      <div class="section-tag">Questions</div>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('open')">
+          Is TekPik free to use?
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="faq-a"><p>Yes! TekPik is completely free for readers. We earn through affiliate commissions when you purchase through our links — at no extra cost to you.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('open')">
+          How do you ensure reviews are unbiased?
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="faq-a"><p>We never accept money or free products in exchange for positive reviews. Our team purchases every product independently and tests them in real Indian conditions — humidity, voltage, network bands, and more.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('open')">
+          Which marketplaces do you compare prices from?
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="faq-a"><p>We track prices across Amazon India and Flipkart. We show you the best deal available across both platforms so you never overpay.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('open')">
+          Can I request a product review?
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="faq-a"><p>Absolutely! Join our beta waitlist and you'll get access to request reviews for specific products. We prioritize the most requested gadgets from our community.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.classList.toggle('active');this.nextElementSibling.classList.toggle('open')">
+          How often are deals updated?
+          <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="faq-a"><p>Our trending deals are updated daily. We also send weekly deal roundups to our newsletter subscribers so you never miss a great price drop.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ NEWSLETTER ═══════ -->
+  <section class="cta-section" id="newsletter" aria-label="Newsletter signup">
+    <div class="cta-card reveal">
+      <div class="cta-content">
+        <h2>Stay ahead of the curve.</h2>
+        <p>Get weekly tech picks, deals, and honest reviews delivered to your inbox. No spam, ever.</p>
+      </div>
+      <div class="cta-form-wrap">
+        <div class="cta-form">
+          <input type="email" placeholder="your@email.com" aria-label="Email address" />
+          <button type="submit">Subscribe</button>
+        </div>
+        <div class="cta-note">Join 5,000+ readers. Unsubscribe anytime.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-about">
+        <a href="/" class="logo">Tekpik<span class="logo-dot"></span></a>
+        <p class="footer-about-desc">India's smartest tech review platform. Honest reviews, best prices, and expert buying guides for every budget.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Explore</div>
+        <ul class="footer-col-links">
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#categories">Categories</a></li>
+          <li><a href="#deals">Deals</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Marketplaces</div>
+        <ul class="footer-col-links">
+          <li><a href="https://amazon.in" target="_blank">Amazon India</a></li>
+          <li><a href="https://flipkart.com" target="_blank">Flipkart</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-col-links">
+          <li><a href="/help/">Terms & Conditions</a></li>
+          <li><a href="/help/">Privacy Policy</a></li>
+          <li><a href="/beta/">Join Beta</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-inner">
+      <div class="footer-copy">© 2024 TekPik. Smart picks for smart buyers.</div>
+      <div class="footer-links">
+        <a href="/help/">Terms</a>
+        <a href="/help/">Privacy</a>
+        <a href="/beta/">Beta</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════ SCRIPTS ═══════ -->
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    }, { passive: true });
+
+    // Scroll reveal animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Newsletter submit — also opens Google Sheet in new tab
+    const GOOGLE_SHEET_URL = 'https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?usp=pp_url&entry.EMAIL_FIELD=';
+    const ctaBtn = document.querySelector('.cta-form button');
+    if (ctaBtn) {
+      ctaBtn.addEventListener('click', () => {
+        const input = document.querySelector('.cta-form input');
+        if (input && input.value.includes('@')) {
+          const email = input.value.trim();
+          // Open Google Sheet/Form in new tab with the email pre-filled
+          window.open(GOOGLE_SHEET_URL + encodeURIComponent(email), '_blank');
+          const old = input.placeholder;
+          input.value = '';
+          input.placeholder = '✓ You\'re subscribed!';
+          ctaBtn.textContent = 'Done!';
+          ctaBtn.style.opacity = '0.6';
+          ctaBtn.style.pointerEvents = 'none';
+          setTimeout(() => {
+            input.placeholder = old;
+            ctaBtn.textContent = 'Subscribe';
+            ctaBtn.style.opacity = '1';
+            ctaBtn.style.pointerEvents = 'auto';
+          }, 3500);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

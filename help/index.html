@@ -1,83 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TekPik Legal & Help - Terms and Conditions</title>
-  <meta name="description" content="Read the Terms and Conditions, Privacy Policy, and legal terms for using TekPik, the smart tech gadget review and affiliate marketing platform." />
+  <title>TekPik Legal & Help — Terms and Conditions</title>
+  <meta name="description" content="Read the Terms and Conditions, Privacy Policy, and legal terms for using TekPik, the smart tech gadget review platform." />
+  <link rel="canonical" href="https://tekpik.in/help/" />
+  <link rel="icon" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
+  <meta property="og:title" content="TekPik Legal — Terms & Conditions" />
+  <meta property="og:description" content="Terms of Service and Privacy Policy for TekPik." />
+  <meta name="robots" content="index, follow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-body: #F8FAFC; 
-      --bg-surface: #FFFFFF;
-      --text-dark: #0F172A;
-      --text-muted: #64748B;
-      --color-primary: #3B82F6;
-      --border-color: #E2E8F0;
+      --bg: #F7F6F2; --surface: #FFFFFF; --border: #E8E6DF;
+      --text: #111110; --text-muted: #888680;
+      --blue: #2A5BF6; --blue-light: #EEF2FF;
+      --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background-color: var(--bg-body);
-      color: var(--text-dark);
-      line-height: 1.6;
-    }
-    h1, h2, h3 { font-family: 'Syne', sans-serif; }
-    header {
-      background: var(--bg-surface);
-      padding: 24px 40px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.6; }
+    h1, h2, h3 { font-family: var(--font-display); }
+
+    /* Nav */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(247,246,242,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5vw; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
     }
     .logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 1.5rem;
-      color: var(--text-dark);
-      text-decoration: none;
-      letter-spacing: -0.05em;
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.35rem; letter-spacing: -0.03em;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
     }
-    .logo span { color: var(--color-primary); }
+    .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); display: inline-block; }
+    .nav-links { display: flex; gap: 24px; list-style: none; align-items: center; }
+    .nav-links a {
+      text-decoration: none; color: var(--text-muted); font-size: 0.875rem; font-weight: 400; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--text) !important; color: var(--bg) !important;
+      padding: 8px 18px !important; border-radius: 100px !important;
+      font-weight: 500 !important; font-size: 0.8rem !important;
+    }
+
+    /* Main */
     main {
-      max-width: 800px;
-      margin: 40px auto;
-      background: var(--bg-surface);
-      padding: 40px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
+      max-width: 760px; margin: 48px auto; padding: 48px;
+      background: var(--surface); border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
     }
-    h1 { font-size: 2rem; margin-bottom: 24px; letter-spacing: -0.03em; }
-    h2 { font-size: 1.25rem; margin-top: 32px; margin-bottom: 16px; font-weight: 700; }
-    p { margin-bottom: 16px; color: var(--text-muted); }
+    .page-icon { margin-bottom: 20px; }
+    .page-icon svg { width: 48px; height: 48px; }
+    h1 { font-size: 2rem; margin-bottom: 8px; letter-spacing: -0.03em; font-weight: 800; }
+    .subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 36px; }
+    h2 { font-size: 1.15rem; margin-top: 36px; margin-bottom: 12px; font-weight: 700; color: var(--text); }
+    p { margin-bottom: 14px; color: var(--text-muted); font-size: 0.92rem; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border); padding: 32px 5vw; background: var(--surface); margin-top: 72px;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto; display: flex;
+      justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    }
+    .footer-copy { font-size: 0.78rem; color: var(--text-muted); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { font-size: 0.78rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+
+    @media (max-width: 768px) {
+      main { margin: 20px 16px; padding: 28px 20px; }
+      h1 { font-size: 1.5rem; }
+      .nav-links { display: none; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <a href="/" class="logo">tekpik<span>&bull;</span></a>
-    <nav>
-      <a href="/app/" style="color: var(--color-primary); text-decoration: none; font-weight: 600;">Go to App</a>
-    </nav>
-  </header>
+
+  <nav>
+    <a href="/" class="logo">Tekpik<span class="logo-dot"></span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/beta/">Join Beta</a></li>
+      <li><a href="/help/" class="nav-cta">Legal</a></li>
+    </ul>
+  </nav>
+
   <main>
+    <div class="page-icon">
+      <svg viewBox="0 0 48 48" fill="none" stroke="#2A5BF6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="8" y="4" width="32" height="40" rx="3"/>
+        <line x1="16" y1="14" x2="32" y2="14"/>
+        <line x1="16" y1="20" x2="28" y2="20"/>
+        <line x1="16" y1="26" x2="32" y2="26"/>
+        <line x1="16" y1="32" x2="24" y2="32"/>
+        <path d="M30 36l3 3 6-6" stroke="#16A34A" stroke-width="2"/>
+      </svg>
+    </div>
+
     <h1>Terms & Conditions</h1>
-    <p>Last updated: October 2026</p>
-    
+    <p class="subtitle">Last updated: October 2026</p>
+
     <h2>1. Introduction</h2>
     <p>Welcome to TekPik. By accessing our platform, you agree to these legal terms. We aim to provide unbiased tech gadget reviews and fair affiliate marketing practices.</p>
-    
+
+    <hr class="divider" />
+
     <h2>2. Affiliate Disclosures</h2>
-    <p>TekPik participates in various affiliate marketing programs. We may earn commissions on purchases made through our links, at no extra cost to you.</p>
+    <p>TekPik participates in various affiliate marketing programs. We may earn commissions on purchases made through our links, at no extra cost to you. All affiliate partnerships are clearly disclosed on relevant pages.</p>
+
+    <hr class="divider" />
 
     <h2>3. User Responsibilities</h2>
-    <p>Users are expected to engage respectfully on our platform. Abuse, spamming, or fraudulent use of the AI Recommender or Affiliate Manager will result in account termination.</p>
+    <p>Users are expected to engage respectfully on our platform. Abuse, spamming, or fraudulent use of any TekPik services will result in account termination and may be reported to relevant authorities.</p>
+
+    <hr class="divider" />
 
     <h2>4. Privacy Policy</h2>
-    <p>We respect your privacy. All telemetry, analytics, and personal data are strictly regulated. We do not sell your personal data.</p>
+    <p>We respect your privacy. All telemetry, analytics, and personal data are strictly regulated under applicable Indian and international privacy laws. We do not sell your personal data to third parties.</p>
+
+    <hr class="divider" />
+
+    <h2>5. Content Disclaimer</h2>
+    <p>Product reviews, prices, and specifications are provided for informational purposes only. While we strive for accuracy, prices and availability may change. TekPik is not responsible for any discrepancies between our content and actual product offerings.</p>
+
+    <hr class="divider" />
+
+    <h2>6. Contact</h2>
+    <p>For any queries regarding these terms or our platform, please reach out to us at <strong>hello@tekpik.in</strong>.</p>
   </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <a href="/" class="logo" style="margin-bottom:6px;display:inline-flex">Tekpik<span class="logo-dot"></span></a>
+        <div class="footer-copy">© 2024 TekPik. Smart picks for smart buyers.</div>
+      </div>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/help/">Terms</a>
+        <a href="/beta/">Join Beta</a>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

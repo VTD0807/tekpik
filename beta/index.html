@@ -1,235 +1,237 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-IN">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TekPik Beta Waitlist</title>
-    <meta name="description" content="Join the exclusive TekPik beta waitlist to get early access to our smart tech gadget platform." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-    
-    <style>
-        /* Minimalist Blue & Black Theme matching App Style */
-        :root {
-            --bg-body: #F8FAFC; 
-            --bg-surface: #FFFFFF;
-            --text-dark: #0F172A; 
-            --text-muted: #64748B;
-            --color-primary: #3B82F6; 
-            --border-color: #E2E8F0;
-            --font-display: 'Syne', sans-serif;
-            --font-body: 'DM Sans', sans-serif;
-            --radius-input: 8px;
-            --radius-card: 16px;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TekPik Beta Waitlist — Get Early Access</title>
+  <meta name="description" content="Join the exclusive TekPik beta waitlist to get early access to India's smartest tech gadget review platform." />
+  <link rel="canonical" href="https://tekpik.in/beta/" />
+  <link rel="icon" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/TEKPIK-LOGO.png" />
+  <meta property="og:title" content="TekPik Beta — Join the Waitlist" />
+  <meta property="og:description" content="Be the first to experience TekPik's smart tech review platform." />
+  <meta name="robots" content="index, follow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F7F6F2; --surface: #FFFFFF; --border: #E8E6DF;
+      --text: #111110; --text-muted: #888680;
+      --blue: #2A5BF6; --blue-light: #EEF2FF;
+      --green: #16A34A; --green-light: #F0FDF4;
+      --font-display: 'Syne', sans-serif; --font-body: 'DM Sans', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.5; display: flex; flex-direction: column; min-height: 100vh;
+    }
+    h1, h2 { font-family: var(--font-display); }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body {
-            font-family: var(--font-body);
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            font-size: 1rem;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+    /* Nav */
+    nav {
+      padding: 24px 5vw; display: flex; justify-content: center; align-items: center;
+    }
+    .logo {
+      font-family: var(--font-display); font-weight: 800;
+      font-size: 1.6rem; letter-spacing: -0.04em;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); display: inline-block; }
 
-        h1, h2 { font-family: var(--font-display); color: var(--text-dark); }
-        h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px; }
-        
-        /* Header */
-        header {
-            padding: 24px 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: transparent;
-        }
+    /* Main */
+    main {
+      flex-grow: 1; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; padding: 40px 20px; gap: 32px;
+    }
 
-        .logo {
-            font-family: var(--font-display);
-            font-weight: 800;
-            font-size: 2rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            letter-spacing: -0.05em;
-        }
-        .logo span { color: var(--color-primary); }
+    /* Features */
+    .features {
+      display: flex; gap: 32px; max-width: 560px; width: 100%;
+      justify-content: center; flex-wrap: wrap;
+    }
+    .feature {
+      display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: var(--text-muted);
+    }
+    .feature svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-        /* Main Content */
-        main {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-        }
+    /* Card */
+    .waitlist-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      padding: 48px; width: 100%; max-width: 480px; text-align: center;
+    }
+    .card-icon { margin-bottom: 20px; }
+    .card-icon svg { width: 56px; height: 56px; }
+    h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 8px; }
+    h1 em { font-style: normal; color: var(--blue); }
+    .waitlist-subtitle { color: var(--text-muted); margin-bottom: 32px; font-size: 1rem; }
 
-        .waitlist-card {
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-card);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            padding: 48px;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-        }
+    /* Form */
+    .form-group { margin-bottom: 18px; text-align: left; }
+    .form-group label {
+      display: block; margin-bottom: 6px; font-weight: 500;
+      font-size: 0.85rem; color: var(--text);
+    }
+    .form-group input {
+      width: 100%; padding: 13px 16px;
+      border: 1px solid var(--border); border-radius: 10px;
+      font-family: inherit; font-size: 0.95rem; color: var(--text);
+      background: var(--bg); transition: all 0.2s;
+    }
+    .form-group input:focus {
+      outline: none; border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(42,91,246,0.12); background: var(--surface);
+    }
+    .btn-submit {
+      width: 100%; padding: 14px;
+      background: var(--text); color: var(--bg);
+      border: none; border-radius: 100px;
+      font-size: 1rem; font-weight: 600; font-family: var(--font-body);
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; margin-top: 10px;
+    }
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .waitlist-subtitle {
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            font-size: 1.05rem;
-        }
+    /* Success */
+    .success-state { display: none; text-align: center; padding: 24px 0; }
+    .success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: var(--green-light); display: flex; align-items: center;
+      justify-content: center; margin: 0 auto 16px;
+    }
+    .success-icon svg { width: 32px; height: 32px; }
+    .success-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .success-desc { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
+    /* Back link */
+    .back-link {
+      font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 4px; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-input);
-            font-family: inherit;
-            font-size: 1rem;
-            color: var(--text-dark);
-            background-color: var(--bg-body);
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-            background-color: var(--bg-surface);
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background-color: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: var(--radius-input);
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 12px;
-            font-family: var(--font-body);
-        }
-
-        .btn-submit:hover { opacity: 0.9; }
-        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
-
-        /* Success Message */
-        .success-state {
-            display: none;
-            text-align: center;
-            padding: 24px 0;
-        }
-        
-        .success-icon {
-            font-size: 4rem;
-            color: var(--color-primary);
-            margin-bottom: 16px;
-        }
-
-    </style>
+    @media (max-width: 768px) {
+      .waitlist-card { padding: 32px 20px; }
+      h1 { font-size: 1.8rem; }
+      .features { gap: 20px; }
+    }
+  </style>
 </head>
 <body>
 
-    <header>
-        <a href="/" class="logo">tekpik<span>&bull;</span></a>
-    </header>
+  <nav>
+    <a href="/" class="logo">Tekpik<span class="logo-dot"></span></a>
+  </nav>
 
-    <main>
-        <div class="waitlist-card" id="form-container">
-            <h1>Join the Beta</h1>
-            <p class="waitlist-subtitle">Be the first to access our new platform.</p>
-            
-            <form id="beta-form" name="google-sheet-form">
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="Name" placeholder="Enter your name" required />
-                </div>
-                
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="Email" placeholder="you@example.com" required />
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="Phone" placeholder="+91 xxxxx xxxxx" required />
-                </div>
-                
-                <button type="submit" class="btn-submit" id="submit-btn">Join Waitlist</button>
-            </form>
+  <main>
+    <!-- Features badges -->
+    <div class="features">
+      <div class="feature">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#16A34A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="10" r="7.5"/>
+          <path d="M7 10l2 2 4-4"/>
+        </svg>
+        Free forever
+      </div>
+      <div class="feature">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#2A5BF6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2l2.5 5 5.5 .8-4 3.9 .9 5.3L10 14.5 5.1 17l.9-5.3-4-3.9 5.5-.8z"/>
+        </svg>
+        Early access perks
+      </div>
+      <div class="feature">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#EA580C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 14V9a7 7 0 0 1 14 0v5"/>
+          <rect x="2" y="12" width="3" height="5" rx="1.5"/>
+          <rect x="15" y="12" width="3" height="5" rx="1.5"/>
+        </svg>
+        Exclusive reviews
+      </div>
+    </div>
 
-            <div class="success-state" id="success-message">
-                <div class="success-icon">✓</div>
-                <h2>You're on the list!</h2>
-                <p style="color: var(--text-muted); margin-top: 8px;">Keep an eye on your inbox for early access invites.</p>
-            </div>
+    <!-- Form Card -->
+    <div class="waitlist-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 56 56" fill="none" stroke="#2A5BF6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="28" cy="28" r="20"/>
+          <path d="M18 28l6 6 14-14"/>
+          <circle cx="28" cy="8" r="3" fill="#2A5BF6" opacity="0.15" stroke="none"/>
+          <circle cx="28" cy="48" r="3" fill="#2A5BF6" opacity="0.15" stroke="none"/>
+          <circle cx="8" cy="28" r="3" fill="#2A5BF6" opacity="0.15" stroke="none"/>
+          <circle cx="48" cy="28" r="3" fill="#2A5BF6" opacity="0.15" stroke="none"/>
+        </svg>
+      </div>
+
+      <h1>Join the <em>Beta</em></h1>
+      <p class="waitlist-subtitle">Be the first to access India's smartest tech platform.</p>
+
+      <form id="beta-form" name="google-sheet-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="Name" placeholder="Enter your name" required />
         </div>
-    </main>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="Email" placeholder="you@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="Phone" placeholder="+91 xxxxx xxxxx" required />
+        </div>
+        <button type="submit" class="btn-submit" id="submit-btn">Join Waitlist →</button>
+      </form>
 
-    <script>
-        const scriptURL = '<YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL>'; 
-        // 👆 INSTRUCTION: Replace <YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL> with the actual App Script deployment URL 
-        // that targets your Google Sheet. It will automatically populate columns matching the 'name' attributes (Name, Email, Phone).
+      <div class="success-state" id="success-message">
+        <div class="success-icon">
+          <svg viewBox="0 0 32 32" fill="none" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 16l5 5 11-11"/>
+          </svg>
+        </div>
+        <div class="success-title">You're on the list!</div>
+        <p class="success-desc">Keep an eye on your inbox for early access invites.</p>
+      </div>
+    </div>
 
-        const form = document.forms['google-sheet-form'];
-        const submitBtn = document.getElementById('submit-btn');
-        const formContainer = document.getElementById('beta-form');
-        const successMessage = document.getElementById('success-message');
+    <a href="/" class="back-link">← Back to TekPik</a>
+  </main>
 
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            submitBtn.disabled = true;
-            submitBtn.innerText = 'Submitting...';
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxygi6mWKjqcjTbf_m7UnmwnmLVwqxQOzn02aTr7OmybOrvI1dYAys_WyziKEY_t1K4kA/exec';
 
-            if (scriptURL === '<YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL>') {
-                // Mock submission for demonstration if no actual script URL is provided yet
-                console.log('Mock submission processing...');
-                setTimeout(() => {
-                    formContainer.style.display = 'none';
-                    successMessage.style.display = 'block';
-                }, 1000);
-                return;
-            }
+    const form = document.forms['google-sheet-form'];
+    const submitBtn = document.getElementById('submit-btn');
+    const formEl = document.getElementById('beta-form');
+    const successMessage = document.getElementById('success-message');
 
-            // Real submission
-            fetch(scriptURL, { 
-                method: 'POST', 
-                body: new FormData(form) 
-            })
-            .then(response => {
-                formContainer.style.display = 'none';
-                successMessage.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error!', error.message);
-                submitBtn.disabled = false;
-                submitBtn.innerText = 'Join Waitlist';
-                alert('There was an issue submitting your request. Please try again.');
-            });
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.innerText = 'Submitting...';
+
+      if (scriptURL.includes('<YOUR_')) {
+        // Mock submission
+        setTimeout(() => {
+          formEl.style.display = 'none';
+          successMessage.style.display = 'block';
+        }, 1000);
+        return;
+      }
+
+      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+        .then(() => {
+          formEl.style.display = 'none';
+          successMessage.style.display = 'block';
+        })
+        .catch(error => {
+          console.error('Error!', error.message);
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Join Waitlist →';
+          alert('There was an issue. Please try again.');
         });
-    </script>
+    });
+  </script>
+
 </body>
 </html>
