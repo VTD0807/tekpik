@@ -4,6 +4,33 @@
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/ig",
+      "destination": "/?utm_source=instagram&utm_medium=story&utm_campaign=ig_story&utm_content=swipeup",
+      "permanent": false
+    },
+    {
+      "source": "/ig/beta",
+      "destination": "/beta/?utm_source=instagram&utm_medium=story&utm_campaign=ig_beta&utm_content=swipeup",
+      "permanent": false
+    },
+    {
+      "source": "/yt",
+      "destination": "/?utm_source=youtube&utm_medium=video&utm_campaign=yt_desc&utm_content=link",
+      "permanent": false
+    },
+    {
+      "source": "/pin",
+      "destination": "/?utm_source=pinterest&utm_medium=pin&utm_campaign=pin_post&utm_content=link",
+      "permanent": false
+    },
+    {
+      "source": "/tw",
+      "destination": "/?utm_source=twitter&utm_medium=social&utm_campaign=tw_post&utm_content=link",
+      "permanent": false
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

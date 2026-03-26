@@ -53,34 +53,44 @@ async function save(colName, data) {
   }
 }
 
-// ── Session deduplication — per device, persists across tabs ─────────────────
-const VISITED_KEY    = "tp_visited";
-const SESSION_KEY    = "tp_session";
-const SESSION_WINDOW = 7 * 24 * 60 * 60 * 1000; // 7 days — one visit per device per week
+// ── Permanent device ID — never expires, survives browser restarts ────────────
+const VISITOR_KEY  = "tp_visitor_id";
+const VISITED_KEY  = "tp_visited";       // tracks which pages this device has visited
+const SESSION_KEY  = "tp_session";       // unused — kept for compat
 
-function isNewSession() {
-  try {
-    // Use localStorage so it persists across tabs (not sessionStorage)
-    const raw = localStorage.getItem(SESSION_KEY);
-    if (!raw) return true;
-    const { ts } = JSON.parse(raw);
-    return (Date.now() - ts) > SESSION_WINDOW;
-  } catch { return true; }
-}
-
-function markSession() {
-  localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }));
-}
-
-// ── Unique visitor ID ─────────────────────────────────────────────────────────
-const VISITOR_KEY = "tp_visitor_id";
 function getVisitorId() {
   let v = localStorage.getItem(VISITOR_KEY);
   if (!v) {
-    v = "v_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+    // Generate a fingerprint-assisted ID for better persistence
+    const fp = [
+      navigator.language,
+      screen.width + "x" + screen.height,
+      screen.colorDepth,
+      navigator.hardwareConcurrency || "",
+      navigator.platform || "",
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+    ].join("|");
+    v = "d_" + Date.now().toString(36) + "_" + btoa(fp).replace(/[^a-z0-9]/gi,"").slice(0,10);
     localStorage.setItem(VISITOR_KEY, v);
   }
   return v;
+}
+
+// Returns true only if this device has NEVER visited this specific page before
+function isFirstVisitToPage(page) {
+  try {
+    const visited = JSON.parse(localStorage.getItem(VISITED_KEY) || "{}");
+    return !visited[page];
+  } catch { return true; }
+}
+
+// Mark this page as visited on this device — permanently
+function markPageVisited(page) {
+  try {
+    const visited = JSON.parse(localStorage.getItem(VISITED_KEY) || "{}");
+    visited[page] = Date.now();
+    localStorage.setItem(VISITED_KEY, JSON.stringify(visited));
+  } catch { /* ignore */ }
 }
 
 function isReturning() { return !!localStorage.getItem("tp_returning"); }
@@ -241,27 +251,15 @@ async function trackVisit() {
     traffic_medium: traffic.medium,
   });
 
-  // Per-page session key — so /beta/ and / are tracked independently
-  const pageSessionKey = SESSION_KEY + "_" + location.pathname.replace(/\//g,"_");
-  const pageNewSession = (() => {
-    try {
-      const raw = localStorage.getItem(pageSessionKey);
-      if (!raw) return true;
-      return (Date.now() - JSON.parse(raw).ts) > SESSION_WINDOW;
-    } catch { return true; }
-  })();
-
-  if (!pageNewSession) {
+  // One visit per device per page — ever. Refreshes, new tabs, return visits all ignored.
+  if (!isFirstVisitToPage(location.pathname)) {
     initSectionObserver();
     initClickTracking();
     return;
   }
 
-  // Mark this page as visited in this session window
-  localStorage.setItem(pageSessionKey, JSON.stringify({ ts: Date.now() }));
-  markReturning();
-
-  const [geo, battery] = await Promise.all([getGeo(), getBattery()]);
+  markPageVisited(location.pathname);
+  markReturning();  const [geo, battery] = await Promise.all([getGeo(), getBattery()]);
   const consent = getCookieConsent();
 
   const payload = {

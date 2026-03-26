@@ -21,6 +21,7 @@ const S = {
   PAGES:    "PAGES",
   COOKIES:  "COOKIES",
   UNIQUE:   "UNIQUE_VISITORS",
+  USERS:    "USER_PROFILES",
   DASH:     "DASHBOARD",
 };
 
@@ -36,6 +37,7 @@ const COLS = {
   PAGES:   ["Page","Title","Visits","Last Seen"],
   COOKIES: ["Choice","Count","Last Seen"],
   UNIQUE:  ["Visitor ID","First Seen","Last Seen","Total Visits","Device","OS","Browser","Country","City","Is New"],
+  USERS:   ["Visitor ID","Name","Email","Phone","First Seen","Last Seen","Country","City","Device","OS","Browser","Language","Screen","Connection","Battery %","Pages Visited","Total Visits","Avg Time on Page (s)","Max Scroll Depth","CTA Clicks","Traffic Source","Referrer","Cookie Choice","On Waitlist","On Newsletter","Waitlist Date","Newsletter Date"],
 };
 
 // ── Main sync — runs every 5 min via trigger ──────────────────────────────────
@@ -47,12 +49,217 @@ function syncAll() {
   syncCollection(ss, "waitlist",       processWaitlist);
   syncCollection(ss, "newsletter",     processNewsletter);
   syncCollection(ss, "consent_events", processConsent);
+  buildUserProfiles(ss);
 }
 
 // Run manually from dropdown to rebuild charts without resetting layout
 function refreshDashboard() {
   rebuildDashboard(SpreadsheetApp.getActiveSpreadsheet());
   SpreadsheetApp.getUi().alert("Dashboard refreshed.");
+}
+
+// Updates only the summary stat numbers — no chart changes at all
+function refreshStatsOnly() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  writeSummaryStats(ss, ss.getSheetByName(S.DASH));
+  SpreadsheetApp.getUi().alert("Stats updated.");
+}
+
+function buildUserProfilesMenu() {
+  buildUserProfiles(SpreadsheetApp.getActiveSpreadsheet());
+  SpreadsheetApp.getUi().alert("USER_PROFILES rebuilt.");
+}
+
+// ── USER_PROFILES — one row per unique visitor, all data consolidated ─────────
+function buildUserProfiles(ss) {
+  ensureSheet(ss, S.USERS, [
+    "Visitor ID","Name","Email","Phone",
+    "First Seen","Last Seen",
+    "Country","City","Device","OS","Browser","Language","Screen","Connection","Battery %",
+    "Pages Visited","Total Visits","Avg Time on Page (s)","Max Scroll Depth","CTA Clicks",
+    "Traffic Source","Referrer","Cookie Choice",
+    "On Waitlist","On Newsletter","Waitlist Date","Newsletter Date"
+  ]);
+
+  var sh = ss.getSheetByName(S.USERS);
+
+  // ── Build lookup maps from source sheets ──────────────────────────────────
+
+  // visits → keyed by visitor_id
+  var visitMap = {};
+  var rawSh = ss.getSheetByName(S.RAW);
+  if (rawSh && rawSh.getLastRow() > 1) {
+    var rawData = rawSh.getDataRange().getValues();
+    var rH = rawData[0];
+    var rVid = rH.indexOf("Visitor ID");
+    for (var i = 1; i < rawData.length; i++) {
+      var r = rawData[i];
+      var vid = r[rVid] || "";
+      if (!vid) continue;
+      if (!visitMap[vid]) {
+        visitMap[vid] = {
+          first_seen:  r[0], last_seen: r[0],
+          country: r[10]||"", city: r[12]||"",
+          device:  r[16]||"", os: r[17]||"", browser: r[18]||"",
+          language: r[19]||"", screen: r[20]||"", connection: r[23]||"",
+          battery: r[24]||"",
+          source:  r[5]||"direct", referrer: r[4]||"",
+          pages: new Set(), visits: 0,
+        };
+      }
+      var v = visitMap[vid];
+      if (r[0] < v.first_seen) v.first_seen = r[0];
+      if (r[0] > v.last_seen)  v.last_seen  = r[0];
+      v.visits++;
+      if (r[1]) v.pages.add(r[1]);
+      // Fill in geo/device if missing
+      if (!v.country && r[10]) v.country = r[10];
+      if (!v.city    && r[12]) v.city    = r[12];
+    }
+  }
+
+  // sessions → avg time, max scroll, cta clicks per visitor_id
+  var sessionMap = {};
+  var sesSh = ss.getSheetByName(S.SESSION);
+  if (sesSh && sesSh.getLastRow() > 1) {
+    var sesData = sesSh.getDataRange().getValues();
+    var sH = sesData[0];
+    var sVid = sH.indexOf("Visitor ID");
+    for (var i = 1; i < sesData.length; i++) {
+      var r = sesData[i];
+      var vid = r[sVid] || "";
+      if (!vid) continue;
+      if (!sessionMap[vid]) sessionMap[vid] = { times:[], scrolls:[], cta:0 };
+      var s = sessionMap[vid];
+      if (r[2] > 0) s.times.push(parseInt(r[2])||0);
+      if (r[3] > 0) s.scrolls.push(parseInt(r[3])||0);
+      s.cta += parseInt(r[5])||0;
+    }
+  }
+
+  // waitlist → keyed by visitor_id and email
+  var waitMap = {};
+  var waitSh = ss.getSheetByName(S.WAITLIST);
+  if (waitSh && waitSh.getLastRow() > 1) {
+    var wData = waitSh.getDataRange().getValues();
+    for (var i = 1; i < wData.length; i++) {
+      var r = wData[i];
+      // WAITLIST cols: Timestamp,Name,Email,Phone,Page,Referrer,DocID
+      waitMap[r[2]] = { name: r[1]||"", email: r[2]||"", phone: r[3]||"", date: r[0]||"" };
+    }
+  }
+
+  // newsletter → keyed by email
+  var newsMap = {};
+  var newsSh = ss.getSheetByName(S.NEWS);
+  if (newsSh && newsSh.getLastRow() > 1) {
+    var nData = newsSh.getDataRange().getValues();
+    for (var i = 1; i < nData.length; i++) {
+      var r = nData[i];
+      newsMap[r[1]] = r[0]; // email → date
+    }
+  }
+
+  // consent → cookie choice per visitor_id
+  var consentMap = {};
+  var conSh = ss.getSheetByName(S.CONSENT);
+  if (conSh && conSh.getLastRow() > 1) {
+    var cData = conSh.getDataRange().getValues();
+    var cH = cData[0];
+    var cVid = cH.indexOf("Visitor ID");
+    var cChoice = cH.indexOf("Choice");
+    for (var i = 1; i < cData.length; i++) {
+      var r = cData[i];
+      var vid = r[cVid]||"";
+      if (vid && !consentMap[vid]) consentMap[vid] = r[cChoice]||"";
+    }
+  }
+
+  // ── Rebuild USER_PROFILES sheet ───────────────────────────────────────────
+  // Clear existing data rows
+  if (sh.getLastRow() > 1) sh.deleteRows(2, sh.getLastRow()-1);
+
+  var rows = [];
+  Object.keys(visitMap).forEach(function(vid) {
+    var v  = visitMap[vid];
+    var se = sessionMap[vid] || { times:[], scrolls:[], cta:0 };
+    var avgTime   = se.times.length   ? Math.round(se.times.reduce(function(a,b){return a+b;},0)/se.times.length) : "";
+    var maxScroll = se.scrolls.length ? Math.max.apply(null, se.scrolls) : "";
+
+    // Try to match waitlist by visitor_id (not possible directly) — match by email if available
+    // For now mark waitlist/newsletter as unknown unless we can cross-reference
+    var wEntry = null;
+    var nDate  = "";
+    // Check if any waitlist email matches newsletter
+    Object.keys(waitMap).forEach(function(email) {
+      // We can't directly link visitor_id to email without the user providing it
+      // So we leave name/email/phone blank unless filled via form
+    });
+
+    rows.push([
+      vid,
+      "",                          // Name — filled when user submits waitlist
+      "",                          // Email
+      "",                          // Phone
+      v.first_seen,
+      v.last_seen,
+      v.country, v.city,
+      v.device, v.os, v.browser, v.language, v.screen, v.connection, v.battery,
+      [...v.pages].join(" | "),
+      v.visits,
+      avgTime,
+      maxScroll,
+      se.cta,
+      v.source,
+      v.referrer,
+      consentMap[vid] || "",
+      "",                          // On Waitlist
+      "",                          // On Newsletter
+      "",                          // Waitlist Date
+      "",                          // Newsletter Date
+    ]);
+  });
+
+  // Also add waitlist entries that may not have a visitor_id match
+  Object.keys(waitMap).forEach(function(email) {
+    var w = waitMap[email];
+    var onNews = newsMap[email] ? "yes" : "no";
+    // Find if this email matches any existing row — if not, add as new row
+    var found = false;
+    rows.forEach(function(row) { if (row[2] === email) found = true; });
+    if (!found) {
+      rows.push([
+        "form_" + email.replace(/[^a-z0-9]/gi,"").slice(0,12),
+        w.name, w.email, w.phone,
+        w.date, w.date,
+        "","","","","","","","","",
+        "/beta/", 1, "","","",
+        "direct","",
+        "",
+        "yes", onNews, w.date, newsMap[email]||"",
+      ]);
+    } else {
+      // Update existing row with name/email/phone/waitlist info
+      rows.forEach(function(row) {
+        if (row[2] === email || row[0].indexOf("form_") === 0) return;
+        row[1] = w.name;
+        row[2] = w.email;
+        row[3] = w.phone;
+        row[23] = "yes";
+        row[25] = w.date;
+        row[24] = newsMap[email] ? "yes" : "no";
+        row[26] = newsMap[email] || "";
+      });
+    }
+  });
+
+  if (rows.length > 0) {
+    sh.getRange(2, 1, rows.length, rows[0].length).setValues(rows);
+  }
+
+  // Style the sheet
+  sh.autoResizeColumns(1, sh.getLastColumn());
+  Logger.log("USER_PROFILES built: " + rows.length + " users");
 }
 
 // ── Trigger install ───────────────────────────────────────────────────────────
@@ -321,12 +528,12 @@ function writeSummaryStats(ss, dash) {
   var newsSh     = ss.getSheetByName(S.NEWS);
   var sessionSh  = ss.getSheetByName(S.SESSION);
 
-  var totalVisits    = rawSh    ? Math.max(0, rawSh.getLastRow()    - 1) : 0;
+  // Use UNIQUE_VISITORS count as the true visit count (one per device)
   var uniqueVisitors = uniqueSh ? Math.max(0, uniqueSh.getLastRow() - 1) : 0;
-  var waitlistCount  = waitSh   ? Math.max(0, waitSh.getLastRow()   - 1) : 0;
-  var newsCount      = newsSh   ? Math.max(0, newsSh.getLastRow()   - 1) : 0;
+  var totalVisits    = uniqueVisitors; // same — one visit per device
+  var waitlistCount  = waitSh  ? Math.max(0, waitSh.getLastRow()  - 1) : 0;
+  var newsCount      = newsSh  ? Math.max(0, newsSh.getLastRow()  - 1) : 0;
 
-  // Avg time on page
   var avgTime = 0;
   if (sessionSh && sessionSh.getLastRow() > 1) {
     var times = sessionSh.getRange(2, 3, sessionSh.getLastRow()-1, 1).getValues();
@@ -335,12 +542,11 @@ function writeSummaryStats(ss, dash) {
     avgTime = count > 0 ? Math.round(sum / count) : 0;
   }
 
-  // Write stat cards
   var stats = [
-    ["📊 Total Visits", totalVisits],
     ["👤 Unique Visitors", uniqueVisitors],
-    ["📋 Waitlist Signups", waitlistCount],
-    ["📧 Newsletter Subs", newsCount],
+    ["📊 Total Page Visits", rawSh ? Math.max(0, rawSh.getLastRow()-1) : 0],
+    ["📋 Waitlist Signups",  waitlistCount],
+    ["📧 Newsletter Subs",   newsCount],
     ["⏱ Avg Time on Page (s)", avgTime],
   ];
 
@@ -575,9 +781,10 @@ function onOpen() {
 function createMenu() {
   SpreadsheetApp.getUi()
     .createMenu("🛠 TekPik Admin")
-    .addItem("▶ Sync Now (pull from Firestore)",          "syncAll")
-    .addItem("� Refresh Stats & Data (keeps layout)",    "refreshStatsOnly")
-    .addItem("📊 Add Missing Charts (keeps colors)",      "refreshDashboard")
+    .addItem("▶ Sync Now (pull from Firestore)",             "syncAll")
+    .addItem("👥 Rebuild User Profiles",                     "buildUserProfilesMenu")
+    .addItem("🔄 Refresh Stats & Data (keeps layout)",       "refreshStatsOnly")
+    .addItem("📊 Add Missing Charts (keeps colors)",         "refreshDashboard")
     .addItem("🔁 Force Full Rebuild (resets layout+colors)", "forceRebuildDashboard")
     .addSeparator()
     .addSubMenu(SpreadsheetApp.getUi().createMenu("➕ Insert Custom Row")
