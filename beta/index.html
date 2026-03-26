@@ -226,24 +226,31 @@
   <script type="module" src="/public/tracker.js"></script>
   <script type="module">
     import { getApp }                                            from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
     import { getAuth, onAuthStateChanged }                       from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    // Reuse the app already initialized by tracker.js
-    const app = getApp();
+    const app  = getApp();
     const db   = getFirestore(app);
     const auth = getAuth(app);
 
     const formEl     = document.getElementById('beta-form');
+    const submitBtn  = document.getElementById('submit-btn');
     const successMsg = document.getElementById('success-message');
 
-    // Block if already submitted from this device
-    const SUBMITTED_KEY = 'tp_beta_submitted';
-    if (localStorage.getItem(SUBMITTED_KEY)) {
-      formEl.style.display = 'none';
+    // Wait for auth to be ready
+    const authReady = new Promise(resolve => {
+      if (auth.currentUser) { resolve(); return; }
+      const unsub = onAuthStateChanged(auth, user => { if (user) { unsub(); resolve(); } });
+      setTimeout(resolve, 4000);
+    });
+
+    // Show already-submitted state if stored locally
+    const stored = JSON.parse(localStorage.getItem('tp_beta_data') || 'null');
+    if (stored) {
+      formEl.style.display     = 'none';
       successMsg.style.display = 'block';
       document.querySelector('.success-title').textContent = "You're already on the list!";
-      document.querySelector('.success-desc').textContent  = "We already have your details. We'll be in touch soon.";
+      document.querySelector('.success-desc').textContent  = "We have your details. We'll be in touch soon.";
     }
 
     formEl.addEventListener('submit', async e => {
@@ -253,25 +260,25 @@
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
 
-      // Show success INSTANTLY
+      if (!name || !email || !phone) return;
+
+      // Show success instantly
       formEl.style.display     = 'none';
       successMsg.style.display = 'block';
 
-      // Block future submissions from this device
-      localStorage.setItem(SUBMITTED_KEY, '1');
+      // Store locally so same device shows "already on list"
+      localStorage.setItem('tp_beta_data', JSON.stringify({ email, phone, ts: Date.now() }));
 
-      // Wait for auth if not ready yet (max 3s)
-      if (!authReady) {
-        await new Promise(resolve => {
-          const unsub = onAuthStateChanged(auth, user => {
-            if (user) { unsub(); resolve(); }
-          });
-          setTimeout(resolve, 3000);
-        });
-      }
-
-      // Write to Firestore
       try {
+        await authReady;
+
+        // Check if email already exists in Firestore
+        const existing = await getDocs(query(collection(db, "waitlist"), where("email", "==", email)));
+        if (!existing.empty) {
+          console.log("Email already on waitlist.");
+          return;
+        }
+
         await addDoc(collection(db, "waitlist"), {
           name, email, phone,
           page:      location.pathname,

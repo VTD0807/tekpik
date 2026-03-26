@@ -1455,38 +1455,42 @@
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Newsletter submit — reuses tracker's Firebase instance (already authed)
+    // Newsletter submit — email-based duplicate check
     const ctaBtn = document.querySelector('.cta-form button');
     if (ctaBtn) {
-      // Block if already subscribed from this device
-      if (localStorage.getItem('tp_newsletter_submitted')) {
-        ctaBtn.textContent    = 'Already subscribed ✓';
-        ctaBtn.style.opacity  = '0.6';
+      // Show already-subscribed if stored locally
+      const storedEmail = localStorage.getItem('tp_newsletter_email');
+      if (storedEmail) {
+        ctaBtn.textContent         = 'Already subscribed ✓';
+        ctaBtn.style.opacity       = '0.6';
         ctaBtn.style.pointerEvents = 'none';
       }
 
       ctaBtn.addEventListener('click', async () => {
-        if (localStorage.getItem('tp_newsletter_submitted')) return;
         const input = document.querySelector('.cta-form input');
         if (!input || !input.value.includes('@')) return;
         const email = input.value.trim();
 
-        // Block immediately
-        localStorage.setItem('tp_newsletter_submitted', '1');
-
         // Show success immediately
-        const old = input.placeholder;
         input.value = '';
         input.placeholder = '✓ You\'re subscribed!';
         ctaBtn.textContent = 'Done!';
         ctaBtn.style.opacity = '0.6';
         ctaBtn.style.pointerEvents = 'none';
 
-        // Write using the same Firebase app already initialized by tracker.js
+        // Store email locally
+        localStorage.setItem('tp_newsletter_email', email);
+
         try {
-          const { getApp }                                         = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
-          const { getFirestore, collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
+          const { getApp }    = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
+          const { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } =
+            await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
           const db = getFirestore(getApp());
+
+          // Check duplicate email
+          const existing = await getDocs(query(collection(db, "newsletter"), where("email", "==", email)));
+          if (!existing.empty) { console.log("Already subscribed."); return; }
+
           await addDoc(collection(db, "newsletter"), {
             email,
             page:      location.pathname,
