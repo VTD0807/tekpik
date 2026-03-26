@@ -1428,10 +1428,21 @@
     // Newsletter submit — reuses tracker's Firebase instance (already authed)
     const ctaBtn = document.querySelector('.cta-form button');
     if (ctaBtn) {
+      // Block if already subscribed from this device
+      if (localStorage.getItem('tp_newsletter_submitted')) {
+        ctaBtn.textContent    = 'Already subscribed ✓';
+        ctaBtn.style.opacity  = '0.6';
+        ctaBtn.style.pointerEvents = 'none';
+      }
+
       ctaBtn.addEventListener('click', async () => {
+        if (localStorage.getItem('tp_newsletter_submitted')) return;
         const input = document.querySelector('.cta-form input');
         if (!input || !input.value.includes('@')) return;
         const email = input.value.trim();
+
+        // Block immediately
+        localStorage.setItem('tp_newsletter_submitted', '1');
 
         // Show success immediately
         const old = input.placeholder;
@@ -1440,12 +1451,6 @@
         ctaBtn.textContent = 'Done!';
         ctaBtn.style.opacity = '0.6';
         ctaBtn.style.pointerEvents = 'none';
-        setTimeout(() => {
-          input.placeholder = old;
-          ctaBtn.textContent = 'Subscribe';
-          ctaBtn.style.opacity = '1';
-          ctaBtn.style.pointerEvents = 'auto';
-        }, 3500);
 
         // Write using the same Firebase app already initialized by tracker.js
         try {

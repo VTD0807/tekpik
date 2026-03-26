@@ -246,6 +246,15 @@
     const formEl     = document.getElementById('beta-form');
     const successMsg = document.getElementById('success-message');
 
+    // Block if already submitted from this device
+    const SUBMITTED_KEY = 'tp_beta_submitted';
+    if (localStorage.getItem(SUBMITTED_KEY)) {
+      formEl.style.display = 'none';
+      successMsg.style.display = 'block';
+      document.querySelector('.success-title').textContent = "You're already on the list!";
+      document.querySelector('.success-desc').textContent  = "We already have your details. We'll be in touch soon.";
+    }
+
     formEl.addEventListener('submit', async e => {
       e.preventDefault();
 
@@ -256,6 +265,9 @@
       // Show success INSTANTLY
       formEl.style.display     = 'none';
       successMsg.style.display = 'block';
+
+      // Block future submissions from this device
+      localStorage.setItem(SUBMITTED_KEY, '1');
 
       // Wait for auth if not ready yet (max 3s)
       if (!authReady) {
