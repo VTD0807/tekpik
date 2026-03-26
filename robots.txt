@@ -1,5 +1,22 @@
 User-agent: *
 Allow: /
 Disallow: /pinterest-ef1dd.html
+Disallow: /ig/
+Disallow: /ig/beta/
+
+# Don't waste crawl budget on JS/assets
+Disallow: /public/tracker.js
+Disallow: /public/sw-tracker.js
+Disallow: /sw.js
 
 Sitemap: https://tekpik.in/sitemap.xml
+
+# Allow major search engines full access
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

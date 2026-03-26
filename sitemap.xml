@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://tekpik.in/</loc>
-    <lastmod>2025-03-26</lastmod>
+    <lastmod>2025-03-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://tekpik.in/"/>
+    <xhtml:link rel="alternate" hreflang="en"    href="https://tekpik.in/"/>
   </url>
   <url>
     <loc>https://tekpik.in/beta/</loc>
-    <lastmod>2025-03-26</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2025-03-27</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tekpik.in/help/</loc>
-    <lastmod>2025-03-26</lastmod>
+    <lastmod>2025-03-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>

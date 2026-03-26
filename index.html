@@ -46,8 +46,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-  <link rel="dns-prefetch" href="" />
   <link rel="dns-prefetch" href="https://www.gstatic.com" />
+  <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" /></noscript>
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
@@ -87,7 +87,7 @@
         "@type": "WebSite", 
         "name": "TekPik", 
         "url": "https://tekpik.in/", 
-        "description": "Best tech gadget reviews, price comparisons, and buying guides for India",
+        "description": "TekPik is India's most trusted tech gadget review platform. We publish unbiased reviews of smartphones, earphones, laptops, smart home devices, and accessories. Compare prices across Amazon India and Flipkart in real time. Expert buying guides for every budget from ₹299 to ₹99,999.",
         "potentialAction": {
           "@type": "SearchAction",
           "target": {
@@ -198,6 +198,20 @@
       { "@type": "HowToStep", "position": 4, "name": "Set a price alert", "text": "Track the product and get notified when the price drops on either platform." },
       { "@type": "HowToStep", "position": 5, "name": "Buy with confidence", "text": "Click through to Amazon or Flipkart and buy at the lowest verified price." }
     ]
+  }
+  </script>
+
+  <!-- Speakable schema — targets Google Assistant / voice search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "TekPik — Best Tech Gadget Reviews India",
+    "url": "https://tekpik.in/",
+    "speakable": {
+      "@type": "SpeakableSpecification",
+      "cssSelector": [".hero-desc", ".section-desc", ".why-desc"]
+    }
   }
   </script>
 
