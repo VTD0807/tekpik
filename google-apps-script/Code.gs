@@ -241,112 +241,76 @@ function ensureSheet(ss, name, headers) {
 }
 
 // ── Dashboard charts ──────────────────────────────────────────────────────────
-// IMPORTANT: rebuildDashboard() only adds MISSING charts.
-// It never deletes or modifies charts you've already customised.
-// To force a full rebuild, run forceRebuildDashboard() instead.
+// rebuildDashboard() only adds MISSING charts (preserves your custom colors).
+// forceRebuildDashboard() wipes everything and rebuilds to the default layout.
 
 var CHART_REGISTRY_KEY = "tp_charts_built";
 
 function rebuildDashboard(ss) {
   var dash = ss.getSheetByName(S.DASH);
-
-  // Read which charts have already been built
   var built = {};
-  try {
-    built = JSON.parse(PropertiesService.getScriptProperties().getProperty(CHART_REGISTRY_KEY) || "{}");
-  } catch(e) { built = {}; }
+  try { built = JSON.parse(PropertiesService.getScriptProperties().getProperty(CHART_REGISTRY_KEY) || "{}"); }
+  catch(e) { built = {}; }
 
-  var row = 3;
-
-  // ── ROW 1: Traffic Sources (Pie) + Device Types (Donut) ──────────────────
-  row = addChartIfMissing(built, "traffic_pie",   function() {
-    return makePie(ss, dash, S.SOURCES, 1, 3, "Traffic Sources",  row, 1);
-  }, row, 1);
-  row = addChartIfMissing(built, "device_pie",    function() {
-    return makePie(ss, dash, S.DEVICES, 1, 4, "Device Types",     row, 7);
-  }, row, 7);
-
-  // ── ROW 2: OS Breakdown (Pie) + Browser Breakdown (Pie) ──────────────────
-  row += 2;
-  row = addChartIfMissing(built, "os_pie",        function() {
-    return makePie(ss, dash, S.DEVICES, 2, 4, "OS Breakdown",     row, 1);
-  }, row, 1);
-  row = addChartIfMissing(built, "browser_pie",   function() {
-    return makePie(ss, dash, S.DEVICES, 3, 4, "Browser Breakdown",row, 7);
-  }, row, 7);
-
-  // ── ROW 3: Top Countries (Bar) + Top Pages (Bar) ──────────────────────────
-  row += 2;
-  row = addChartIfMissing(built, "geo_bar",       function() {
-    return makeBar(ss, dash, S.GEO,   1, 4, "Top Countries",      row, 1);
-  }, row, 1);
-  row = addChartIfMissing(built, "pages_bar",     function() {
-    return makeBar(ss, dash, S.PAGES, 1, 3, "Top Pages",          row, 7);
-  }, row, 7);
-
-  // ── ROW 4: Cookie Consent (Pie) + New vs Returning (Pie) ─────────────────
-  row += 2;
-  addChartIfMissing(built, "cookie_pie",          function() {
-    return makePie(ss, dash, S.COOKIES, 1, 2, "Cookie Consent",   row, 1);
-  }, row, 1);
-  addChartIfMissing(built, "newreturn_pie",        function() {
-    return makeNewReturnPie(ss, dash, row, 7);
-  }, row, 7);
-
-  // ── ROW 5: Visits over time (Line) + Sessions over time (Line) ───────────
-  row += 18;
-  addChartIfMissing(built, "visits_line",         function() {
-    return makeTimeLine(ss, dash, S.RAW,     1, "Daily Visits",   row, 1);
-  }, row, 1);
-  addChartIfMissing(built, "sessions_line",       function() {
-    return makeTimeLine(ss, dash, S.SESSION, 1, "Daily Sessions", row, 7);
-  }, row, 7);
-
-  // ── ROW 6: Top Cities (Column) + Scroll Depth (Column) ───────────────────
-  row += 18;
-  addChartIfMissing(built, "cities_col",          function() {
-    return makeColumn(ss, dash, S.GEO,     3, 4, "Top Cities",    row, 1);
-  }, row, 1);
-  addChartIfMissing(built, "scroll_col",          function() {
-    return makeScrollDepthChart(ss, dash, row, 7);
-  }, row, 7);
-
-  // ── ROW 7: Waitlist growth (Area) + Newsletter growth (Area) ─────────────
-  row += 18;
-  addChartIfMissing(built, "waitlist_area",       function() {
-    return makeAreaChart(ss, dash, S.WAITLIST, 1, "Waitlist Signups Over Time", row, 1);
-  }, row, 1);
-  addChartIfMissing(built, "newsletter_area",     function() {
-    return makeAreaChart(ss, dash, S.NEWS, 1, "Newsletter Signups Over Time",   row, 7);
-  }, row, 7);
-
-  // Save registry
-  PropertiesService.getScriptProperties().setProperty(CHART_REGISTRY_KEY, JSON.stringify(built));
-
-  // Write summary stats at top
+  // ── Row 1: Summary stats (rows 1-3) ──────────────────────────────────────
   writeSummaryStats(ss, dash);
-}
 
-// Only inserts a chart if it hasn't been built before
-function addChartIfMissing(built, key, buildFn, row, col) {
-  if (!built[key]) {
-    try { buildFn(); built[key] = true; } catch(e) { Logger.log("Chart error " + key + ": " + e.message); }
-  }
-  return row + 16;
+  // ── Row 2: Charts row 1 — starts at row 4 ────────────────────────────────
+  // Col A(1): Device Types Pie
+  // Col C(3): OS Breakdown Pie
+  // Col E(5): Traffic Sources Pie
+  // Col G(7): Browser Breakdown Pie
+  // Col I(9): Scroll Depth Column
+  // Col K(11): Top Pages Bar
+  if (!built["device_pie"])   { makePie(ss,dash,S.DEVICES,1,4,"Device Types",4,1);        built["device_pie"]=true; }
+  if (!built["os_pie"])       { makePie(ss,dash,S.DEVICES,2,4,"OS Breakdown",4,3);        built["os_pie"]=true; }
+  if (!built["traffic_pie"])  { makePie(ss,dash,S.SOURCES,1,3,"Traffic Sources",4,5);     built["traffic_pie"]=true; }
+  if (!built["browser_pie"])  { makePie(ss,dash,S.DEVICES,3,4,"Browser Breakdown",4,7);   built["browser_pie"]=true; }
+  if (!built["scroll_col"])   { makeScrollDepthChart(ss,dash,4,9);                        built["scroll_col"]=true; }
+  if (!built["pages_bar"])    { makeBar(ss,dash,S.PAGES,1,3,"Top Pages",4,11);            built["pages_bar"]=true; }
+
+  // ── Row 3: Charts row 2 — starts at row 21 ───────────────────────────────
+  // Col A(1): New vs Returning Pie
+  // Col C(3): Top Countries Bar
+  // Col E(5): Newsletter Signups Area
+  // Col G(7): Top Cities Column
+  if (!built["newreturn_pie"])    { makeNewReturnPie(ss,dash,21,1);                       built["newreturn_pie"]=true; }
+  if (!built["geo_bar"])          { makeBar(ss,dash,S.GEO,1,4,"Top Countries",21,3);      built["geo_bar"]=true; }
+  if (!built["newsletter_area"])  { makeAreaChart(ss,dash,S.NEWS,1,"Newsletter Signups Over Time",21,5); built["newsletter_area"]=true; }
+  if (!built["cities_col"])       { makeColumn(ss,dash,S.GEO,3,4,"Top Cities",21,7);      built["cities_col"]=true; }
+
+  // ── Row 4: Full-width line charts — starts at row 38 ─────────────────────
+  // Col A(1): Daily Visits Line
+  // Col G(7): Waitlist Growth Area
+  if (!built["visits_line"])      { makeTimeLine(ss,dash,S.RAW,1,"Daily Visits",38,1);    built["visits_line"]=true; }
+  if (!built["waitlist_area"])    { makeAreaChart(ss,dash,S.WAITLIST,1,"Waitlist Signups Over Time",38,7); built["waitlist_area"]=true; }
+
+  // ── Row 5: Cookie consent + Sessions line — row 55 ───────────────────────
+  if (!built["cookie_pie"])       { makePie(ss,dash,S.COOKIES,1,2,"Cookie Consent",55,1); built["cookie_pie"]=true; }
+  if (!built["sessions_line"])    { makeTimeLine(ss,dash,S.SESSION,1,"Daily Sessions",55,7); built["sessions_line"]=true; }
+
+  PropertiesService.getScriptProperties().setProperty(CHART_REGISTRY_KEY, JSON.stringify(built));
+  writeSummaryStats(ss, dash);
 }
 
 // ── Force full rebuild (clears all charts + registry) ────────────────────────
 function forceRebuildDashboard() {
   var ui   = SpreadsheetApp.getUi();
-  var conf = ui.alert("This will delete ALL charts and rebuild from scratch.\nYour custom colors will be reset.\n\nContinue?", ui.ButtonSet.YES_NO);
+  var conf = ui.alert("This will delete ALL charts and rebuild to the default layout.\nYour custom colors will be reset.\n\nContinue?", ui.ButtonSet.YES_NO);
   if (conf !== ui.Button.YES) return;
   var ss   = SpreadsheetApp.getActiveSpreadsheet();
   var dash = ss.getSheetByName(S.DASH);
+  // Remove all charts
   dash.getCharts().forEach(function(c) { dash.removeChart(c); });
+  // Clear content but keep the sheet
   dash.clearContents();
+  // Clear temp data columns
+  dash.getRange(1, 20, dash.getMaxRows(), 22).clearContent();
+  // Reset registry so all charts rebuild fresh
   PropertiesService.getScriptProperties().deleteProperty(CHART_REGISTRY_KEY);
+  // Rebuild to default layout
   rebuildDashboard(ss);
-  ui.alert("Dashboard fully rebuilt.");
+  ui.alert("Dashboard rebuilt to default layout.");
 }
 
 // ── Summary stats block at top of dashboard ───────────────────────────────────
@@ -611,9 +575,10 @@ function onOpen() {
 function createMenu() {
   SpreadsheetApp.getUi()
     .createMenu("🛠 TekPik Admin")
-    .addItem("▶ Sync Now (pull from Firestore)", "syncAll")
-    .addItem("📊 Refresh Dashboard Charts",      "refreshDashboard")
-    .addItem("🔁 Force Full Rebuild (resets colors)", "forceRebuildDashboard")
+    .addItem("▶ Sync Now (pull from Firestore)",          "syncAll")
+    .addItem("� Refresh Stats & Data (keeps layout)",    "refreshStatsOnly")
+    .addItem("📊 Add Missing Charts (keeps colors)",      "refreshDashboard")
+    .addItem("🔁 Force Full Rebuild (resets layout+colors)", "forceRebuildDashboard")
     .addSeparator()
     .addSubMenu(SpreadsheetApp.getUi().createMenu("➕ Insert Custom Row")
       .addItem("Insert into RAW_VISITS",    "insertCustomVisit")

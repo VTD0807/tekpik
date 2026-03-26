@@ -56,7 +56,7 @@ async function save(colName, data) {
 // ── Session deduplication — per device, persists across tabs ─────────────────
 const VISITED_KEY    = "tp_visited";
 const SESSION_KEY    = "tp_session";
-const SESSION_WINDOW = 30 * 60 * 1000; // 30 min
+const SESSION_WINDOW = 7 * 24 * 60 * 60 * 1000; // 7 days — one visit per device per week
 
 function isNewSession() {
   try {
