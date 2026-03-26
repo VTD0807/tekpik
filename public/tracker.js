@@ -147,29 +147,121 @@ async function getBattery() {
   } catch { return {}; }
 }
 
-// ── Device ────────────────────────────────────────────────────────────────────
-function getDevice() {
-  const ua = navigator.userAgent;
+// ── Device — full specs using Client Hints + UA parsing ───────────────────────
+async function getDevice() {
+  const ua     = navigator.userAgent;
   const mobile = /Mobi|Android|iPhone|iPad/i.test(ua);
-  let os = "unknown";
-  if (/Windows/i.test(ua))          os = "Windows";
-  else if (/Android/i.test(ua))     os = "Android";
-  else if (/iPhone|iPad/i.test(ua)) os = "iOS";
-  else if (/Mac/i.test(ua))         os = "macOS";
-  else if (/Linux/i.test(ua))       os = "Linux";
-  let browser = "unknown";
-  if (/Edg\//i.test(ua))        browser = "Edge";
-  else if (/OPR\//i.test(ua))   browser = "Opera";
-  else if (/Chrome/i.test(ua))  browser = "Chrome";
-  else if (/Firefox/i.test(ua)) browser = "Firefox";
-  else if (/Safari/i.test(ua))  browser = "Safari";
+
+  // ── Basic UA parsing ──────────────────────────────────────────────────────
+  let os = "unknown", os_version = "", browser = "unknown", browser_version = "";
+
+  // Android version + brand from UA
+  const androidMatch = ua.match(/Android\s([\d.]+)/i);
+  const iosMatch     = ua.match(/OS\s([\d_]+)/i);
+  if (androidMatch)      { os = "Android"; os_version = androidMatch[1]; }
+  else if (/iPhone/i.test(ua)) { os = "iOS"; os_version = iosMatch ? iosMatch[1].replace(/_/g,".") : ""; }
+  else if (/iPad/i.test(ua))   { os = "iPadOS"; os_version = iosMatch ? iosMatch[1].replace(/_/g,".") : ""; }
+  else if (/Windows NT ([\d.]+)/i.test(ua)) { os = "Windows"; os_version = ua.match(/Windows NT ([\d.]+)/i)[1]; }
+  else if (/Mac OS X ([\d_]+)/i.test(ua))   { os = "macOS";   os_version = ua.match(/Mac OS X ([\d_]+)/i)[1].replace(/_/g,"."); }
+  else if (/Linux/i.test(ua))  { os = "Linux"; }
+
+  // Browser + version
+  const bMatch = ua.match(/(Edg|OPR|Chrome|Firefox|Safari|SamsungBrowser|UCBrowser|MiuiBrowser)\/([\d.]+)/i);
+  if (bMatch) {
+    const bName = bMatch[1].toLowerCase();
+    browser_version = bMatch[2];
+    if (bName === "edg")           browser = "Edge";
+    else if (bName === "opr")      browser = "Opera";
+    else if (bName === "samsungbrowser") browser = "Samsung Browser";
+    else if (bName === "ucbrowser")     browser = "UC Browser";
+    else if (bName === "miuibrowser")   browser = "MIUI Browser";
+    else if (bName === "chrome")   browser = "Chrome";
+    else if (bName === "firefox")  browser = "Firefox";
+    else if (bName === "safari")   browser = "Safari";
+  }
+
+  // ── Device brand + model from UA ─────────────────────────────────────────
+  let brand = "unknown", model = "unknown";
+
+  // Android device model — format: (Linux; Android X.X; BRAND MODEL)
+  const androidDevice = ua.match(/\(Linux;[^)]*;\s*([^)]+)\)/i);
+  if (androidDevice) {
+    const raw = androidDevice[1].trim();
+    // Remove "Build/..." suffix
+    const clean = raw.replace(/\s+Build\/.*$/i, "").trim();
+    // Known brand prefixes
+    const brands = ["Samsung","Xiaomi","Redmi","POCO","Realme","OnePlus","Vivo","OPPO","Motorola","Nokia","Huawei","Honor","iQOO","Tecno","Infinix","Lava","Micromax","Nothing","Google"];
+    for (const b of brands) {
+      if (clean.toUpperCase().startsWith(b.toUpperCase()) || clean.toUpperCase().includes(b.toUpperCase())) {
+        brand = b;
+        model = clean;
+        break;
+      }
+    }
+    if (brand === "unknown" && clean) { model = clean; }
+  }
+
+  // ── User-Agent Client Hints (Chrome 90+, Android Chrome) ─────────────────
+  // This gives the most accurate brand/model on modern Android
+  let chBrand = "", chModel = "", chPlatform = "", chPlatformVersion = "", chMobile = mobile;
+  try {
+    if (navigator.userAgentData) {
+      const hints = await navigator.userAgentData.getHighEntropyValues([
+        "brands","model","platform","platformVersion","mobile","architecture","bitness"
+      ]);
+      // Brand — pick the real one (not "Not A;Brand" or "Chromium")
+      const realBrand = (hints.brands || []).find(b =>
+        !b.brand.includes("Not") && !b.brand.includes("Chromium") && b.brand !== ""
+      );
+      if (realBrand) { chBrand = realBrand.brand; browser_version = realBrand.version || browser_version; }
+      chModel           = hints.model           || "";
+      chPlatform        = hints.platform        || "";
+      chPlatformVersion = hints.platformVersion || "";
+      chMobile          = hints.mobile          ?? mobile;
+
+      // Override with Client Hints data (more accurate)
+      if (chModel)    model = chModel;
+      if (chPlatform) os    = chPlatform;
+      if (chPlatformVersion) os_version = chPlatformVersion;
+
+      // Detect brand from model string
+      if (chModel) {
+        const brands = ["Samsung","Xiaomi","Redmi","POCO","Realme","OnePlus","Vivo","OPPO","Motorola","Nokia","Huawei","Honor","Google","Nothing"];
+        for (const b of brands) {
+          if (chModel.toUpperCase().includes(b.toUpperCase())) { brand = b; break; }
+        }
+        // Samsung SM- prefix
+        if (chModel.startsWith("SM-")) brand = "Samsung";
+        // Xiaomi/Redmi patterns
+        if (/^(M\d{4}|2\d{9}|21\d{8}|22\d{8}|23\d{8})/i.test(chModel)) brand = "Xiaomi";
+        // Realme RMX
+        if (/^RMX/i.test(chModel)) brand = "Realme";
+        // OnePlus
+        if (/^(IN|LE|KB|AC|BE|DN|NE|PH|CPH)/i.test(chModel)) brand = "OnePlus";
+      }
+    }
+  } catch(e) { /* Client Hints not supported */ }
+
   return {
-    device: mobile ? "mobile" : "desktop", os, browser,
-    language: navigator.language || "",
-    screen: `${screen.width}x${screen.height}`,
-    viewport: `${innerWidth}x${innerHeight}`,
-    touch: navigator.maxTouchPoints > 0 ? "yes" : "no",
-    connection: navigator.connection?.effectiveType || "",
+    device:           chMobile ? "mobile" : "desktop",
+    brand:            brand !== "unknown" ? brand : (chBrand || "unknown"),
+    model:            model !== "unknown" ? model : "unknown",
+    os,
+    os_version,
+    browser,
+    browser_version,
+    language:         navigator.language || "",
+    screen:           `${screen.width}x${screen.height}`,
+    viewport:         `${innerWidth}x${innerHeight}`,
+    pixel_ratio:      window.devicePixelRatio || 1,
+    touch:            navigator.maxTouchPoints > 0 ? "yes" : "no",
+    touch_points:     navigator.maxTouchPoints || 0,
+    connection:       navigator.connection?.effectiveType || "",
+    connection_type:  navigator.connection?.type || "",
+    downlink:         navigator.connection?.downlink || "",
+    memory_gb:        navigator.deviceMemory || "",
+    cpu_cores:        navigator.hardwareConcurrency || "",
+    platform:         navigator.platform || "",
   };
 }
 
@@ -259,7 +351,7 @@ async function trackVisit() {
   }
 
   markPageVisited(location.pathname);
-  markReturning();  const [geo, battery] = await Promise.all([getGeo(), getBattery()]);
+  markReturning();  const [geo, battery, device] = await Promise.all([getGeo(), getBattery(), getDevice()]);
   const consent = getCookieConsent();
 
   const payload = {
@@ -274,8 +366,7 @@ async function trackVisit() {
     ...traffic,
     ...geo,
     ...device,
-    ...battery,
-    cookie_prefs:   consent ? JSON.stringify(consent) : "not_set",
+    ...battery,    cookie_prefs:   consent ? JSON.stringify(consent) : "not_set",
   };
 
   await save("visits", payload);
