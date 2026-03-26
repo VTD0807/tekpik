@@ -1399,8 +1399,45 @@
     }
     .tp-dismiss-btn:hover { background: var(--surface-alt); color: var(--text); }
 
-    @media (max-width: 480px) {
-      #tp-cookie { bottom: 0; right: 0; left: 0; width: 100%; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+      #tp-cookie {
+        bottom: 0; right: 0; left: 0;
+        width: 100%; max-width: 100%;
+        border-radius: 20px 20px 0 0;
+        border-bottom: none;
+        /* slide up from bottom on mobile */
+        animation: tp-slide-up-mobile 0.35s cubic-bezier(0.16,1,0.3,1) both;
+      }
+      @keyframes tp-slide-up-mobile {
+        from { transform: translateY(100%); opacity: 1; }
+        to   { transform: translateY(0);    opacity: 1; }
+      }
+      .tp-cookie-inner {
+        padding: 20px 20px 28px; /* extra bottom padding for home indicator */
+      }
+      /* stack buttons vertically on small screens */
+      .tp-cookie-actions {
+        flex-direction: column; gap: 8px;
+      }
+      .tp-btn-ghost, .tp-btn-outline, .tp-btn-solid {
+        width: 100%; text-align: center;
+        padding: 12px 16px; font-size: 0.85rem;
+      }
+      /* put reject last visually — accept first */
+      .tp-btn-solid  { order: 1; }
+      .tp-btn-outline { order: 2; }
+      .tp-btn-ghost  { order: 3; }
+      /* slightly larger toggle hit area on touch */
+      .tp-toggle-row { padding: 13px 0; }
+      .tp-toggle { width: 42px; height: 24px; }
+      .tp-toggle-thumb { width: 18px; height: 18px; }
+      .tp-toggle-input:checked + .tp-toggle .tp-toggle-thumb { transform: translateX(18px); }
+      .tp-toggle--locked .tp-toggle-thumb { transform: translateX(18px); }
+      .tp-toggle-name  { font-size: 0.85rem; }
+      .tp-toggle-desc  { font-size: 0.72rem; }
+      .tp-cookie-title { font-size: 0.95rem; }
+      .tp-cookie-note  { font-size: 0.72rem; margin-top: 14px; }
     }
   </style>
 
