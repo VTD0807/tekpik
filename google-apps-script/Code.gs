@@ -54,11 +54,20 @@ const COLS = {
 function syncAll() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   ensureAllSheets(ss);
-  syncCollection(ss, "visits",       processVisit);
-  syncCollection(ss, "session_ends", processSession);
-  syncCollection(ss, "waitlist",     processWaitlist);
-  syncCollection(ss, "newsletter",   processNewsletter);
-  rebuildDashboard(ss);
+  syncCollection(ss, "visits",         processVisit);
+  syncCollection(ss, "session_ends",   processSession);
+  syncCollection(ss, "waitlist",       processWaitlist);
+  syncCollection(ss, "newsletter",     processNewsletter);
+  syncCollection(ss, "consent_events", processConsent);
+  // Dashboard never auto-rebuilds — run refreshDashboard() manually
+}
+
+function refreshDashboard() {
+  rebuildDashboard(SpreadsheetApp.getActiveSpreadsheet());
+  SpreadsheetApp.getUi().alert("Dashboard refreshed.");
+}
+  rebuildDashboard(SpreadsheetApp.getActiveSpreadsheet());
+  SpreadsheetApp.getUi().alert("Dashboard charts refreshed.");
 }
 
 // ── Install a 5-minute trigger (run once manually) ────────────────────────────
@@ -124,12 +133,10 @@ function syncCollection(ss, colName, processor) {
 
     data.documents.forEach(doc => {
       const f = doc.fields || {};
-      // Skip already-synced docs
       if (f._synced && f._synced.booleanValue === true) return;
 
       try {
         processor(ss, f, doc.name);
-        // Mark synced in Firestore
         const shortPath = doc.name.split("/documents/")[1];
         firestorePatch(shortPath, f);
         synced++;
@@ -142,6 +149,7 @@ function syncCollection(ss, colName, processor) {
   } while (pageToken);
 
   Logger.log(`Synced ${synced} docs from ${colName}`);
+  return synced;
 }
 
 // ── Processors ────────────────────────────────────────────────────────────────

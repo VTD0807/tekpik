@@ -1425,7 +1425,7 @@
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // Newsletter submit — writes to Firestore instantly, Apps Script syncs to Sheets
+    // Newsletter submit — reuses tracker's Firebase instance (already authed)
     const ctaBtn = document.querySelector('.cta-form button');
     if (ctaBtn) {
       ctaBtn.addEventListener('click', async () => {
@@ -1433,7 +1433,7 @@
         if (!input || !input.value.includes('@')) return;
         const email = input.value.trim();
 
-        // Show success immediately — no waiting
+        // Show success immediately
         const old = input.placeholder;
         input.value = '';
         input.placeholder = '✓ You\'re subscribed!';
@@ -1447,125 +1447,110 @@
           ctaBtn.style.pointerEvents = 'auto';
         }, 3500);
 
-        // Write to Firestore in background
+        // Write using the same Firebase app already initialized by tracker.js
         try {
-          const { initializeApp }                              = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
+          const { getApp }                                         = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
           const { getFirestore, collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
-          const _app = initializeApp({
-            apiKey:"AIzaSyDhQvBGPA4-DaM5ANQgAVDyfaQ1xnb3BX0",
-            authDomain:"tekpik-traffc-sheets.firebaseapp.com",
-            projectId:"tekpik-traffc-sheets",
-            storageBucket:"tekpik-traffc-sheets.firebasestorage.app",
-            messagingSenderId:"781158758068",
-            appId:"1:781158758068:web:ea559a2a4bfab083a609e1",
-          }, "newsletter");
-          const _db = getFirestore(_app);
-          await addDoc(collection(_db, "newsletter"), {
+          const db = getFirestore(getApp());
+          await addDoc(collection(db, "newsletter"), {
             email,
+            page:      location.pathname,
+            referrer:  document.referrer || "direct",
             timestamp: new Date().toISOString(),
-            _ts: serverTimestamp(),
-            _synced: false,
+            _ts:       serverTimestamp(),
+            _synced:   false,
           });
+          console.log("Newsletter saved.");
         } catch (err) {
-          console.warn("Newsletter Firestore write failed:", err.message);
+          console.warn("Newsletter write failed:", err.message);
         }
       });
     }
   </script>
 
   <script>
-    // ── Cookie consent logic ──────────────────────────────────────────────────
-    const CONSENT_KEY  = 'tp_cookie_consent';
-    const VISITOR_KEY  = 'tp_visitor_id';
-    const popup        = document.getElementById('tp-cookie');
+    // ── Cookie consent — full metrics ─────────────────────────────────────────
+    const CONSENT_KEY = 'tp_cookie_consent';
+    const VISITOR_KEY = 'tp_visitor_id';
+    const popup       = document.getElementById('tp-cookie');
+    let   _popupShownAt = null;
 
-    // ── Unique visitor ID — persists in localStorage forever ─────────────────
     function getVisitorId() {
       let vid = localStorage.getItem(VISITOR_KEY);
       if (!vid) {
-        vid = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+        vid = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
         localStorage.setItem(VISITOR_KEY, vid);
       }
       return vid;
     }
 
-    // ── Save consent + write stats to Firestore ───────────────────────────────
-    async function saveConsent(prefs) {
-      const data = {
-        ...prefs,
-        saved_at:   new Date().toISOString(),
-        version:    1,
-        visitor_id: getVisitorId(),
+    function getContext() {
+      return {
+        visitor_id:     getVisitorId(),
+        page:           location.pathname,
+        referrer:       document.referrer || 'direct',
+        timestamp:      new Date().toISOString(),
+        device:         /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        language:       navigator.language || '',
+        screen:         screen.width + 'x' + screen.height,
+        is_new_visitor: !localStorage.getItem('tp_returning'),
       };
-      localStorage.setItem(CONSENT_KEY, JSON.stringify(data));
-      popup.style.display = 'none';
+    }
 
-      // Write consent choice + visitor stats to Firestore
+    // Reuse tracker's Firebase app — no duplicate instances
+    async function writeConsentEvent(payload) {
       try {
-        const { initializeApp }                                     = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
-        const { getFirestore, collection, addDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
-        const { getAuth, signInAnonymously }                        = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js");
+        const { getApp }                                             = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js");
+        const { getFirestore, collection, addDoc, serverTimestamp }  = await import("https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js");
+        const db = getFirestore(getApp());
+        await addDoc(collection(db, "consent_events"), { ...payload, _ts: serverTimestamp(), _synced: false });
+      } catch(e) { console.warn('Consent write failed:', e.message); }
+    }
 
-        const _app = initializeApp({
-          apiKey:"AIzaSyDhQvBGPA4-DaM5ANQgAVDyfaQ1xnb3BX0",
-          authDomain:"tekpik-traffc-sheets.firebaseapp.com",
-          projectId:"tekpik-traffc-sheets",
-          storageBucket:"tekpik-traffc-sheets.firebasestorage.app",
-          messagingSenderId:"781158758068",
-          appId:"1:781158758068:web:ea559a2a4bfab083a609e1",
-        }, "consent-app");
-        const _db   = getFirestore(_app);
-        const _auth = getAuth(_app);
-        await signInAnonymously(_auth).catch(()=>{});
+    function saveConsent(prefs) {
+      const timeToDecide = _popupShownAt ? Math.round((Date.now() - _popupShownAt) / 1000) : null;
+      const ctx = getContext();
+      localStorage.setItem(CONSENT_KEY, JSON.stringify({ ...prefs, saved_at: ctx.timestamp, version: 1, visitor_id: ctx.visitor_id }));
+      localStorage.setItem('tp_returning', '1');
+      popup.style.display = 'none';
+      writeConsentEvent({ ...ctx, event: 'consent_' + prefs.choice, choice: prefs.choice,
+        analytics: prefs.analytics||false, personalisation: prefs.personalisation||false,
+        marketing: prefs.marketing||false, time_to_decide_s: timeToDecide });
+    }
 
-        await addDoc(collection(_db, "consent_events"), {
-          visitor_id:      getVisitorId(),
-          choice:          prefs.choice,
-          analytics:       prefs.analytics       || false,
-          personalisation: prefs.personalisation || false,
-          marketing:       prefs.marketing       || false,
-          page:            location.pathname,
-          referrer:        document.referrer || "direct",
-          timestamp:       new Date().toISOString(),
-          device:          /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop",
-          language:        navigator.language || "",
-          _ts:             serverTimestamp(),
-          _synced:         false,
-        });
-      } catch(e) { console.warn("Consent Firestore write failed:", e.message); }
+    function dismissPopup() {
+      const timeToDecide = _popupShownAt ? Math.round((Date.now() - _popupShownAt) / 1000) : null;
+      popup.style.display = 'none';
+      writeConsentEvent({ ...getContext(), event: 'consent_dismissed', choice: 'dismissed',
+        analytics: false, personalisation: false, marketing: false, time_to_decide_s: timeToDecide });
     }
 
     function initCookiePopup() {
-      // Already decided — never show again
       if (localStorage.getItem(CONSENT_KEY)) return;
 
-      // Show after 70 seconds — user has had time to engage with the page
-      setTimeout(() => { popup.style.display = 'block'; }, 70000);
+      setTimeout(() => {
+        popup.style.display = 'block';
+        _popupShownAt = Date.now();
+        writeConsentEvent({ ...getContext(), event: 'consent_shown', choice: 'shown' });
+      }, 70000);
 
-      // Sync aria-checked when toggles change
       ['tp-analytics','tp-personalisation','tp-marketing'].forEach(id => {
-        const cb  = document.getElementById(id);
-        const tog = cb.nextElementSibling;
-        cb.addEventListener('change', () => tog.setAttribute('aria-checked', cb.checked));
+        const cb = document.getElementById(id);
+        cb.addEventListener('change', () => cb.nextElementSibling.setAttribute('aria-checked', cb.checked));
       });
 
-      document.getElementById('tp-accept-all').addEventListener('click', () => {
-        saveConsent({ essential: true, analytics: true, personalisation: true, marketing: true, choice: 'accept_all' });
-      });
-
-      document.getElementById('tp-reject-all').addEventListener('click', () => {
-        saveConsent({ essential: true, analytics: false, personalisation: false, marketing: false, choice: 'reject_all' });
-      });
-
-      document.getElementById('tp-save-prefs').addEventListener('click', () => {
-        saveConsent({
-          essential:       true,
+      document.getElementById('tp-accept-all').addEventListener('click', () =>
+        saveConsent({ essential:true, analytics:true, personalisation:true, marketing:true, choice:'accept_all' }));
+      document.getElementById('tp-reject-all').addEventListener('click', () =>
+        saveConsent({ essential:true, analytics:false, personalisation:false, marketing:false, choice:'reject_all' }));
+      document.getElementById('tp-save-prefs').addEventListener('click', () =>
+        saveConsent({ essential:true,
           analytics:       document.getElementById('tp-analytics').checked,
           personalisation: document.getElementById('tp-personalisation').checked,
           marketing:       document.getElementById('tp-marketing').checked,
-          choice:          'custom',
-        });
-      });
+          choice:'custom' }));
+      document.getElementById('tp-dismiss').addEventListener('click', dismissPopup);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape' && popup.style.display !== 'none') dismissPopup(); });
     }
 
     initCookiePopup();

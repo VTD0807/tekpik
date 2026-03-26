@@ -226,7 +226,7 @@
   <script type="module">
     import { initializeApp }                                     from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously }                        from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged }    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
     const app = initializeApp({
       apiKey:            "AIzaSyDhQvBGPA4-DaM5ANQgAVDyfaQ1xnb3BX0",
@@ -239,8 +239,9 @@
     const db   = getFirestore(app);
     const auth = getAuth(app);
 
-    // Sign in anonymously on page load — ready before user even submits
-    signInAnonymously(auth).catch(() => {});
+    // Wait for auth to be ready before allowing submit
+    let authReady = false;
+    signInAnonymously(auth).then(() => { authReady = true; }).catch(() => { authReady = true; });
 
     const formEl     = document.getElementById('beta-form');
     const successMsg = document.getElementById('success-message');
@@ -253,10 +254,20 @@
       const phone = document.getElementById('phone').value.trim();
 
       // Show success INSTANTLY
-      formEl.style.display  = 'none';
+      formEl.style.display     = 'none';
       successMsg.style.display = 'block';
 
-      // Write to Firestore in background
+      // Wait for auth if not ready yet (max 3s)
+      if (!authReady) {
+        await new Promise(resolve => {
+          const unsub = onAuthStateChanged(auth, user => {
+            if (user) { unsub(); resolve(); }
+          });
+          setTimeout(resolve, 3000);
+        });
+      }
+
+      // Write to Firestore
       try {
         await addDoc(collection(db, "waitlist"), {
           name, email, phone,
@@ -266,6 +277,7 @@
           _ts:       serverTimestamp(),
           _synced:   false,
         });
+        console.log("Waitlist entry saved.");
       } catch (err) {
         console.warn("Firestore write failed:", err.message);
       }
