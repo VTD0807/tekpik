@@ -3,14 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TekPik Beta Waitlist — Get Early Access</title>
-  <meta name="description" content="Join the exclusive TekPik beta waitlist to get early access to India's smartest tech gadget review platform." />
+  <title>TekPik Beta Waitlist — Get Early Access to India's Smartest Tech Platform</title>
+  <meta name="description" content="Join the TekPik beta waitlist for early access to India's smartest tech gadget review platform. Free forever. Get exclusive reviews and price alerts." />
   <link rel="canonical" href="https://tekpik.in/beta/" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffffff' rx='20'/%3E%3Ctext x='25' y='75' font-family='sans-serif' font-weight='900' font-size='75' fill='%230C0A09'%3ET%3C/text%3E%3Ccircle cx='80' cy='70' r='12' fill='%233B82F6'/%3E%3C/svg%3E" />
-  <meta property="og:title" content="TekPik Beta — Join the Waitlist" />
-  <meta property="og:description" content="Be the first to experience TekPik's smart tech review platform." />
-  <meta name="robots" content="index, follow" />
-  <meta name="keywords" content="Tekpik Shop, amazon, flipkart, tech gadgets india, beta access, early access tech" />
+  <link rel="icon" type="image/png" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/LOGO11.png" />
+  <link rel="apple-touch-icon" href="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/LOGO11.png" />
+  <meta property="og:title" content="TekPik Beta — Join the Waitlist for Early Access" />
+  <meta property="og:description" content="Be the first to experience TekPik's smart tech review platform. Free forever. Exclusive reviews and price alerts." />
+  <meta property="og:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/LOGO11.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="TekPik Beta — Join the Waitlist" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tekpik.in/beta/" />
+  <meta property="og:site_name" content="TekPik" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@weoqens" />
+  <meta name="twitter:title" content="TekPik Beta — Join the Waitlist" />
+  <meta name="twitter:description" content="Be the first to experience TekPik's smart tech review platform." />
+  <meta name="twitter:image" content="https://ooqens.web.app/OQENS-CLOUD/TEKPIK-CLOUD/MEDIA/LOGO11.png" />
+  <meta name="twitter:image:alt" content="TekPik Beta — Join the Waitlist" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
+  <meta name="keywords" content="tekpik beta, early access tech india, tech gadget review platform india, best tech deals india" />
   <meta name="author" content="TekPik" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -199,39 +213,52 @@
     <a href="/" class="back-link">← Back to TekPik</a>
   </main>
 
-  <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxygi6mWKjqcjTbf_m7UnmwnmLVwqxQOzn02aTr7OmybOrvI1dYAys_WyziKEY_t1K4kA/exec';
+  <script type="module">
+    import { initializeApp }                                     from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously }                        from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    const form = document.forms['google-sheet-form'];
-    const submitBtn = document.getElementById('submit-btn');
-    const formEl = document.getElementById('beta-form');
-    const successMessage = document.getElementById('success-message');
+    const app = initializeApp({
+      apiKey:            "AIzaSyDhQvBGPA4-DaM5ANQgAVDyfaQ1xnb3BX0",
+      authDomain:        "tekpik-traffc-sheets.firebaseapp.com",
+      projectId:         "tekpik-traffc-sheets",
+      storageBucket:     "tekpik-traffc-sheets.firebasestorage.app",
+      messagingSenderId: "781158758068",
+      appId:             "1:781158758068:web:ea559a2a4bfab083a609e1",
+    });
+    const db   = getFirestore(app);
+    const auth = getAuth(app);
 
-    form.addEventListener('submit', e => {
+    // Sign in anonymously on page load — ready before user even submits
+    signInAnonymously(auth).catch(() => {});
+
+    const formEl     = document.getElementById('beta-form');
+    const successMsg = document.getElementById('success-message');
+
+    formEl.addEventListener('submit', async e => {
       e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.innerText = 'Submitting...';
 
-      if (scriptURL.includes('<YOUR_')) {
-        // Mock submission
-        setTimeout(() => {
-          formEl.style.display = 'none';
-          successMessage.style.display = 'block';
-        }, 1000);
-        return;
-      }
+      const name  = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
 
-      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
-        .then(() => {
-          formEl.style.display = 'none';
-          successMessage.style.display = 'block';
-        })
-        .catch(error => {
-          console.error('Error!', error.message);
-          submitBtn.disabled = false;
-          submitBtn.innerText = 'Join Waitlist →';
-          alert('There was an issue. Please try again.');
+      // Show success INSTANTLY
+      formEl.style.display  = 'none';
+      successMsg.style.display = 'block';
+
+      // Write to Firestore in background
+      try {
+        await addDoc(collection(db, "waitlist"), {
+          name, email, phone,
+          page:      location.pathname,
+          referrer:  document.referrer || "direct",
+          timestamp: new Date().toISOString(),
+          _ts:       serverTimestamp(),
+          _synced:   false,
         });
+      } catch (err) {
+        console.warn("Firestore write failed:", err.message);
+      }
     });
   </script>
 

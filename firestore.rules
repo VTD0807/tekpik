@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // visits — anonymous auth required + field validation
+    match /visits/{docId} {
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasAll(['page','timestamp','source'])
+                    && request.resource.data.page is string
+                    && request.resource.data.source is string
+                    && request.resource.data.timestamp is string;
+      allow read, update, delete: if false;
+    }
+
+    // session_ends
+    match /session_ends/{docId} {
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasAll(['page','timestamp'])
+                    && request.resource.data.page is string;
+      allow read, update, delete: if false;
+    }
+
+    // waitlist
+    match /waitlist/{docId} {
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasAll(['email','timestamp'])
+                    && request.resource.data.email is string
+                    && request.resource.data.email.matches('.*@.*\\..*');
+      allow read, update, delete: if false;
+    }
+
+    // newsletter
+    match /newsletter/{docId} {
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasAll(['email','timestamp'])
+                    && request.resource.data.email is string
+                    && request.resource.data.email.matches('.*@.*\\..*');
+      allow read, update, delete: if false;
+    }
+
+    // block everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
