@@ -241,17 +241,26 @@ async function trackVisit() {
     traffic_medium: traffic.medium,
   });
 
-  // Only record one Firestore doc per 30-min session (prevents refresh inflation)
-  if (!newSession) {
+  // Per-page session key — so /beta/ and / are tracked independently
+  const pageSessionKey = SESSION_KEY + "_" + location.pathname.replace(/\//g,"_");
+  const pageNewSession = (() => {
+    try {
+      const raw = localStorage.getItem(pageSessionKey);
+      if (!raw) return true;
+      return (Date.now() - JSON.parse(raw).ts) > SESSION_WINDOW;
+    } catch { return true; }
+  })();
+
+  if (!pageNewSession) {
     initSectionObserver();
     initClickTracking();
     return;
   }
 
-  markSession();
+  // Mark this page as visited in this session window
+  localStorage.setItem(pageSessionKey, JSON.stringify({ ts: Date.now() }));
   markReturning();
 
-  // Geo + battery in parallel — don't block page
   const [geo, battery] = await Promise.all([getGeo(), getBattery()]);
   const consent = getCookieConsent();
 
@@ -271,7 +280,6 @@ async function trackVisit() {
     cookie_prefs:   consent ? JSON.stringify(consent) : "not_set",
   };
 
-  // Write to Firestore — auth waits internally
   await save("visits", payload);
 
   initSectionObserver();
