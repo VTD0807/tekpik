@@ -44,6 +44,14 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // user_history — service worker writes (no auth required since SW can't do anon auth easily)
+    match /user_history/{docId} {
+      allow create: if request.resource.data.keys().hasAll(['event_type','timestamp','visitor_id'])
+                    && request.resource.data.event_type is string
+                    && request.resource.data.visitor_id is string;
+      allow read, update, delete: if false;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }

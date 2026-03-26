@@ -22,6 +22,7 @@ const S = {
   UNIQUE:    "UNIQUE_VISITORS",
   USERS:     "USER_PROFILES",
   CAMPAIGNS: "CAMPAIGNS",
+  HISTORY:   "USER_HISTORY",
   DASH:      "DASHBOARD",
 };
 
@@ -45,6 +46,7 @@ const COLS = {
   UNIQUE:    ["Visitor ID","First Seen","Last Seen","Total Visits","Device","Brand","Model","OS","OS Version","Browser","Country","City","Memory GB","CPU Cores","Is New"],
   USERS:     ["Visitor ID","Name","Email","Phone","First Seen","Last Seen","Country","City","Device","Brand","Model","OS","OS Version","Browser","Language","Screen","Connection","Memory GB","CPU Cores","Pages Visited","Total Visits","Avg Time (s)","Max Scroll %","CTA Clicks","Source","Referrer","Cookie Choice","On Waitlist","On Newsletter","Waitlist Date","Newsletter Date"],
   CAMPAIGNS: ["Campaign","Source","Medium","Content","Visits","Unique Visitors","Last Click","Pages Hit"],
+  HISTORY:   ["Timestamp","Visitor ID","Event Type","Page","Page Title","URL","Referrer","Device","Language","Section","Link Href","Link Text","Link Type","Time on Page (s)","Scroll Depth %","Sections Viewed","CTA Clicks","Doc ID"],
 };
 
 // ── Main sync ─────────────────────────────────────────────────────────────────
@@ -56,7 +58,7 @@ function syncAll() {
   syncCollection(ss, "waitlist",       processWaitlist);
   syncCollection(ss, "newsletter",     processNewsletter);
   syncCollection(ss, "consent_events", processConsent);
-  // USER_PROFILES & CAMPAIGNS built manually to avoid quota
+  syncCollection(ss, "user_history",   processUserHistory);
 }
 
 function refreshDashboard() {
@@ -199,6 +201,29 @@ function processConsent(ss, f, docName) {
     if (data[i][0] === choice) { sh.getRange(i+1,2).setValue(data[i][1]+1); sh.getRange(i+1,3).setValue(fv(f.timestamp)); return; }
   }
   sh.appendRow([choice, 1, fv(f.timestamp)]);
+}
+
+function processUserHistory(ss, f, docName) {
+  ss.getSheetByName(S.HISTORY).appendRow([
+    fv(f.timestamp),
+    fv(f.visitor_id),
+    fv(f.event_type),
+    fv(f.page),
+    fv(f.page_title),
+    fv(f.url),
+    fv(f.referrer),
+    fv(f.device),
+    fv(f.language),
+    fv(f.section)    || "",
+    fv(f.link_href)  || "",
+    fv(f.link_text)  || "",
+    fv(f.link_type)  || "",
+    fv(f.time_on_page_s) || "",
+    fv(f.scroll_depth)   || "",
+    fv(f.sections)       || "",
+    fv(f.cta_clicks)     || "",
+    docName.split("/").pop(),
+  ]);
 }
 
 // ── Upserts ───────────────────────────────────────────────────────────────────
