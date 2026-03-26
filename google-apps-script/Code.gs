@@ -32,6 +32,7 @@ const S = {
   DEVICES:   "DEVICES",
   PAGES:     "PAGES",
   COOKIES:   "COOKIES",
+  UNIQUE:    "UNIQUE_VISITORS",
   DASHBOARD: "DASHBOARD",
 };
 
@@ -46,6 +47,7 @@ const COLS = {
   DEVICES:   ["Device","OS","Browser","Visits","Last Seen"],
   PAGES:     ["Page","Title","Visits","Last Seen"],
   COOKIES:   ["Choice","Analytics","Personalisation","Marketing","Count","Last Seen"],
+  UNIQUE:    ["Visitor ID","First Seen","Last Seen","Total Visits","Device","OS","Browser","Country","City","Is New"],
 };
 
 // ── Entry: manual run or time trigger ────────────────────────────────────────
@@ -161,6 +163,10 @@ function processVisit(ss, f, docName) {
   upsertCount(ss, S.DEVICES, [fv(f.device)||"", fv(f.os)||"", fv(f.browser)||""], 3, fv(f.timestamp));
   upsertCount(ss, S.PAGES,   [fv(f.page)||"/", fv(f.page_title)||""], 2, fv(f.timestamp));
 
+  // Unique visitor upsert
+  const vid = fv(f.visitor_id);
+  if (vid) upsertUniqueVisitor(ss, f, vid);
+
   const prefs = fv(f.cookie_prefs);
   if (prefs && prefs !== "not_set") {
     try { upsertCookies(ss, JSON.parse(prefs), fv(f.timestamp)); } catch(_) {}
@@ -240,6 +246,34 @@ function upsertCookies(ss, prefs, timestamp) {
     }
   }
   sh.appendRow([choice, prefs.analytics?"yes":"no", prefs.personalisation?"yes":"no", prefs.marketing?"yes":"no", 1, timestamp]);
+}
+
+function upsertUniqueVisitor(ss, f, vid) {
+  const sh   = ss.getSheetByName(S.UNIQUE);
+  const data = sh.getDataRange().getValues();
+  const ts   = fv(f.timestamp);
+
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === vid) {
+      // Update last seen + increment visit count
+      sh.getRange(i+1, 3).setValue(ts);
+      sh.getRange(i+1, 4).setValue(data[i][3] + 1);
+      return;
+    }
+  }
+  // New unique visitor
+  sh.appendRow([
+    vid,
+    ts,                    // first seen
+    ts,                    // last seen
+    1,                     // total visits
+    fv(f.device)  || "",
+    fv(f.os)      || "",
+    fv(f.browser) || "",
+    fv(f.country) || "",
+    fv(f.city)    || "",
+    fv(f.is_new_visitor) === true ? "yes" : "no",
+  ]);
 }
 
 // ── Dashboard charts ──────────────────────────────────────────────────────────
