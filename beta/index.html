@@ -223,25 +223,16 @@
     <a href="/" class="back-link">← Back to TekPik</a>
   </main>
 
+  <script type="module" src="/public/tracker.js"></script>
   <script type="module">
-    import { initializeApp }                                     from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+    import { getApp }                                            from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
     import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged }    from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged }                       from "https://www.gstatic.com/firebasejs/12.11.0/firebase-auth.js";
 
-    const app = initializeApp({
-      apiKey:            "AIzaSyDhQvBGPA4-DaM5ANQgAVDyfaQ1xnb3BX0",
-      authDomain:        "tekpik-traffc-sheets.firebaseapp.com",
-      projectId:         "tekpik-traffc-sheets",
-      storageBucket:     "tekpik-traffc-sheets.firebasestorage.app",
-      messagingSenderId: "781158758068",
-      appId:             "1:781158758068:web:ea559a2a4bfab083a609e1",
-    });
+    // Reuse the app already initialized by tracker.js
+    const app = getApp();
     const db   = getFirestore(app);
     const auth = getAuth(app);
-
-    // Wait for auth to be ready before allowing submit
-    let authReady = false;
-    signInAnonymously(auth).then(() => { authReady = true; }).catch(() => { authReady = true; });
 
     const formEl     = document.getElementById('beta-form');
     const successMsg = document.getElementById('success-message');

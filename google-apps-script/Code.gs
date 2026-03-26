@@ -132,10 +132,10 @@ function processVisit(ss, f, docName) {
     fv(f.battery_pct), fv(f.battery_charging),
     fv(f.visitor_id), fv(f.is_new_visitor), fv(f.cookie_prefs), id,
   ]);
-  upsertCount(ss, S.SOURCES, [fv(f.source)||"direct", fv(f.medium)||"none"], 2, fv(f.timestamp));
-  upsertCount(ss, S.GEO,     [fv(f.country)||"", fv(f.region)||"", fv(f.city)||""], 3, fv(f.timestamp));
-  upsertCount(ss, S.DEVICES, [fv(f.device)||"", fv(f.os)||"", fv(f.browser)||""], 3, fv(f.timestamp));
-  upsertCount(ss, S.PAGES,   [fv(f.page)||"/", fv(f.page_title)||""], 2, fv(f.timestamp));
+  upsertCount(ss, S.SOURCES, [fv(f.source)||"direct",  fv(f.medium)||"none"],    2, fv(f.timestamp));
+  upsertCount(ss, S.GEO,     [fv(f.country)||"unknown", fv(f.region)||"", fv(f.city)||""], 3, fv(f.timestamp));
+  upsertCount(ss, S.DEVICES, [fv(f.device)||"unknown",  fv(f.os)||"unknown", fv(f.browser)||"unknown"], 3, fv(f.timestamp));
+  upsertCount(ss, S.PAGES,   [fv(f.page)||"/",          fv(f.page_title)||""], 2, fv(f.timestamp));
   var vid = fv(f.visitor_id);
   if (vid) upsertUniqueVisitor(ss, f, vid);
 }
@@ -288,4 +288,46 @@ function setup() {
   ensureAllSheets(ss);
   installTrigger();
   SpreadsheetApp.getUi().alert("TekPik: all sheets created and 5-min trigger installed.");
+}
+
+// Run this ONCE to clear misaligned data rows (keeps headers) then re-sync
+function resetAndResync() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetsToClear = [S.RAW, S.SESSION, S.WAITLIST, S.NEWS, S.CONSENT, S.SOURCES, S.GEO, S.DEVICES, S.PAGES, S.COOKIES, S.UNIQUE];
+  sheetsToClear.forEach(function(name) {
+    var sh = ss.getSheetByName(name);
+    if (sh && sh.getLastRow() > 1) {
+      sh.deleteRows(2, sh.getLastRow() - 1);
+    }
+  });
+  // Reset _synced flags in Firestore so all docs re-sync
+  var collections = ["visits","session_ends","waitlist","newsletter","consent_events"];
+  collections.forEach(function(col) {
+    resetSyncedFlag(col);
+  });
+  SpreadsheetApp.getUi().alert("Sheets cleared. Run syncAll() to re-populate with correct column order.");
+}
+
+function resetSyncedFlag(col) {
+  var token = ScriptApp.getOAuthToken();
+  var pageToken = null;
+  do {
+    var url = FIRESTORE_BASE + "/" + col + "?pageSize=200";
+    if (pageToken) url += "&pageToken=" + pageToken;
+    var res = UrlFetchApp.fetch(url, { headers: { Authorization: "Bearer " + token }, muteHttpExceptions: true });
+    if (res.getResponseCode() !== 200) break;
+    var data = JSON.parse(res.getContentText());
+    if (!data.documents) break;
+    data.documents.forEach(function(doc) {
+      var shortPath = doc.name.split("/documents/")[1];
+      UrlFetchApp.fetch(FIRESTORE_BASE + "/" + shortPath + "?updateMask.fieldPaths=_synced", {
+        method: "PATCH",
+        headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
+        payload: JSON.stringify({ fields: { _synced: { booleanValue: false } } }),
+        muteHttpExceptions: true,
+      });
+    });
+    pageToken = data.nextPageToken || null;
+  } while (pageToken);
+  Logger.log("Reset _synced flags in " + col);
 }

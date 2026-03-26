@@ -53,20 +53,23 @@ async function save(colName, data) {
   }
 }
 
-// ── Session deduplication — 30 min ───────────────────────────────────────────
+// ── Session deduplication — per device, persists across tabs ─────────────────
+const VISITED_KEY    = "tp_visited";
 const SESSION_KEY    = "tp_session";
-const SESSION_WINDOW = 30 * 60 * 1000;
+const SESSION_WINDOW = 30 * 60 * 1000; // 30 min
 
 function isNewSession() {
   try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
+    // Use localStorage so it persists across tabs (not sessionStorage)
+    const raw = localStorage.getItem(SESSION_KEY);
     if (!raw) return true;
-    return (Date.now() - JSON.parse(raw).ts) > SESSION_WINDOW;
+    const { ts } = JSON.parse(raw);
+    return (Date.now() - ts) > SESSION_WINDOW;
   } catch { return true; }
 }
 
 function markSession() {
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }));
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ ts: Date.now() }));
 }
 
 // ── Unique visitor ID ─────────────────────────────────────────────────────────
