@@ -441,21 +441,21 @@ function makeTimeLine(ss, dash, src, tsCol, title, aRow, aCol) {
   var sh = ss.getSheetByName(src);
   if (!sh || sh.getLastRow() < 2) return;
 
-  // Build date → count map
   var rows  = sh.getRange(2, tsCol, sh.getLastRow()-1, 1).getValues();
   var counts = {};
   rows.forEach(function(r) {
     if (!r[0]) return;
-    var d = r[0].toString().slice(0, 10); // YYYY-MM-DD
+    var d = r[0].toString().slice(0, 10);
     counts[d] = (counts[d] || 0) + 1;
   });
 
   var keys = Object.keys(counts).sort();
   if (keys.length < 2) return;
 
-  // Write temp data to a hidden area of the dashboard
-  var startCol = aCol === 1 ? 20 : 26; // use cols 20+ as temp area
+  var startCol = aCol === 1 ? 20 : 26;
   var startRow = aRow;
+  // Clear old temp data first
+  dash.getRange(startRow, startCol, 200, 2).clearContent();
   dash.getRange(startRow, startCol).setValue("Date");
   dash.getRange(startRow, startCol+1).setValue("Count");
   keys.forEach(function(k, i) {
@@ -499,6 +499,8 @@ function makeAreaChart(ss, dash, src, tsCol, title, aRow, aCol) {
 
   var startCol = aCol === 1 ? 28 : 31;
   var startRow = aRow;
+  // Clear old temp data first
+  dash.getRange(startRow, startCol, 200, 2).clearContent();
   dash.getRange(startRow, startCol).setValue("Date");
   dash.getRange(startRow, startCol+1).setValue("Signups");
   var cumulative = 0;
@@ -535,6 +537,8 @@ function makeNewReturnPie(ss, dash, aRow, aCol) {
   if (newCount + retCount === 0) return;
 
   var startCol = 34;
+  // Clear old temp data first
+  dash.getRange(aRow, startCol, 10, 2).clearContent();
   dash.getRange(aRow, startCol).setValue("Type");
   dash.getRange(aRow, startCol+1).setValue("Count");
   dash.getRange(aRow+1, startCol).setValue("New Visitors");
@@ -568,6 +572,8 @@ function makeScrollDepthChart(ss, dash, aRow, aCol) {
   });
 
   var startCol = 36;
+  // Clear old temp data first
+  dash.getRange(aRow, startCol, 10, 2).clearContent();
   dash.getRange(aRow, startCol).setValue("Depth");
   dash.getRange(aRow, startCol+1).setValue("Sessions");
   var keys = Object.keys(buckets);
@@ -699,7 +705,15 @@ function clearAllSheets() {
   if (conf !== ui.Button.YES) return;
   [S.RAW, S.SESSION, S.WAITLIST, S.NEWS, S.CONSENT,
    S.SOURCES, S.GEO, S.DEVICES, S.PAGES, S.COOKIES, S.UNIQUE].forEach(clearSheetData);
-  ui.alert("All data rows cleared.");
+
+  // Also clear temp chart data columns in dashboard (cols 20-40)
+  var dash = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(S.DASH);
+  if (dash) dash.getRange(1, 20, dash.getMaxRows(), 22).clearContent();
+
+  // Reset chart registry so charts rebuild fresh
+  PropertiesService.getScriptProperties().deleteProperty(CHART_REGISTRY_KEY);
+
+  ui.alert("All data cleared. Run refreshDashboard() to rebuild charts with fresh data.");
 }
 
 function clearSheetData(name) {
